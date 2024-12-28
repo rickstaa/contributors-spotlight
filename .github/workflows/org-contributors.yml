@@ -1,0 +1,66 @@
+name: Fetch Organization Contributors Data
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Runs every Sunday at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch_contributors_data:
+    name: Fetch Organization Contributors Data
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch public organization members
+        id: fetch_members
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const org = 'livepeer';
+            const members = await github.paginate(github.rest.orgs.listPublicMembers, {
+              org,
+              per_page: 100,
+            });
+            return members;
+
+      - name: Fetch public repositories
+        id: fetch_repos
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const org = 'livepeer';
+            const repos = await github.paginate(github.repos.listForOrg, {
+              org,
+              type: 'public',
+              per_page: 100,
+            });
+            const nonForkRepos = repos.filter(repo => !repo.fork);
+            return nonForkRepos;
+
+      - name: Save JSON files
+        run: |
+          echo '${{ steps.fetch_members.outputs.result }}' > members.json
+          echo '${{ steps.fetch_repos.outputs.result }}' > repos.json
+
+      - name: Run contributor action
+        uses: github/contributors@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ steps.fetch_repos.outputs.result }}
+          ORGANIZATION: livepeer
+          SPONSOR_INFO: "true"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-artifacts
+          path: |
+            members.json
+            repos.json
