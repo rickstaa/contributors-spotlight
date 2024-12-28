@@ -1,0 +1,409 @@
+{
+    "start_date": "2024-03-08",
+    "end_date": "2024-03-15",
+    "organization": null,
+    "repository_list": [
+        "github/stale-repos",
+        "github/issue-metrics",
+        "github/contributors",
+        "github/automatic-contrib-prs",
+        "github/evergreen",
+        "github/cleanowners"
+    ],
+    "sponsor_info": false,
+    "link_to_profile": false,
+    "contributors": [
+        {
+            "username": "zkoppert",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert2",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth2",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi2",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert3",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth3",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi3",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert4",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth4",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi4",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert5",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth5",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi5",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert6",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth6",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi6",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "zkoppert7",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/6935431?v=4",
+            "contribution_count": 785,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/issue-metrics/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/contributors/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/evergreen/commits?author=zkoppert&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=zkoppert&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "jmeridth7",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/35014?v=4",
+            "contribution_count": 94,
+            "commit_url": "https://github.com/github/stale-repos/commits?author=jmeridth&since=2024-03-08&until=2024-03-15, https://github.com/github/cleanowners/commits?author=jmeridth&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi7",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi8",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi9",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi10",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi11",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi12",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi13",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi14",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi15",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi16",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi17",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi18",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi19",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi20",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi21",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi22",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindis23",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi24",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi25",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi26",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi27",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi28",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi29",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi30",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindis31",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi32",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi33",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi34",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        },
+        {
+            "username": "gbrindisi35",
+            "new_contributor": false,
+            "avatar_url": "https://avatars.githubusercontent.com/u/287126?v=4",
+            "contribution_count": 25,
+            "commit_url": "https://github.com/github/evergreen/commits?author=gbrindisi&since=2024-03-08&until=2024-03-15",
+            "sponsor_info": ""
+        }
+    ]
+}
