@@ -213,5 +213,6 @@ if __name__ == "__main__":
     file_path = os.path.join(script_dir, "data/contributors_info.json")
     save_to_json(contributors_info, file_path)
     print(
-        f"Retrieved contributions for {len(contributors_info)} contributors and saved to contributors_info.json"
+        f"Retrieved contributions for {len(contributors_info)} contributors and saved "
+        f"to {file_path}"
     )
