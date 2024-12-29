@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  pages: write
+  contents: write
 
 jobs:
   fetch_livepeer_contributors_info:
