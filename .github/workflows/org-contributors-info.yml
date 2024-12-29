@@ -36,8 +36,9 @@ jobs:
         run: |
           python scripts/get_org_contributors_info.py
 
-      - name: Upload contributors_info.json as artifact
-        uses: actions/upload-artifact@v3
+      - name: Publish contributors_info.json to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: contributors_info
-          path: contributors_info.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./scripts/data
+          publish_branch: gh-pages-data
