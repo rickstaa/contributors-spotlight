@@ -12,8 +12,13 @@ from typing import Dict, List
 
 from github import Github
 
+FILE_DIR = os.path.dirname(os.path.abspath
+(__file__))
+
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = os.getenv("ORG_NAME")
+OUTPUT_PATH = os.getenv("OUTPUT_PATH")
+
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN environment variable not set")
@@ -168,15 +173,17 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
     """
     print("Retrieving public organization members...")
     public_members = get_public_org_members(org_name)
+    print(f"Public members: {len(public_members)}")
     print("Retrieving public repositories...")
     public_repos = get_public_source_repos(org_name)
+    print(f"Public repositories: {len(public_repos)}")
 
     # Get contributors info.
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=365)
     contributors_info: Dict[str, ContributorInfo] = {}
     print("Retrieving contributors info...")
-    for repo in public_repos[:1]:
+    for repo in public_repos:
         for contributor in repo.get_contributors():
             if contributor.login not in contributors_info:
                 contributors_info[contributor.login] = ContributorInfo(
@@ -200,19 +207,14 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
             contributors_info[contributor.login].add_yearly_contributions(
                 yearly_contributions
             )
-        print(f"Retrieved contributors info for: {repo.full_name}")
-
+        print(f"Retrieved contributors info for {repo.name}")
     return [contributor.to_dict() for contributor in contributors_info.values()]
 
 
 if __name__ == "__main__":
-    print(f"Retrieving contributors info for {ORG_NAME}...")
+    print(f"Retrieving contributors info for {ORG_NAME} organisation...")
     contributors_info = get_org_contributors_info(ORG_NAME)
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, "data/contributors_info.json")
+    file_path = os.path.join(FILE_DIR, "assets/contributors_info.json")
     save_to_json(contributors_info, file_path)
-    print(
-        f"Retrieved contributions for {len(contributors_info)} contributors and saved "
-        f"to {file_path}"
-    )
+    print(f"Saved contributors info to {file_path}")
