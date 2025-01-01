@@ -12,8 +12,7 @@ from typing import Dict, List
 
 from github import Github
 
-FILE_DIR = os.path.dirname(os.path.abspath
-(__file__))
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = os.getenv("ORG_NAME")
@@ -185,6 +184,8 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
     print("Retrieving contributors info...")
     for repo in public_repos:
         for contributor in repo.get_contributors():
+            if "[bot]" in contributor.login:
+                continue  # Skip bot contributors
             if contributor.login not in contributors_info:
                 contributors_info[contributor.login] = ContributorInfo(
                     login=contributor.login,
