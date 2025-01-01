@@ -208,7 +208,12 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
                 yearly_contributions
             )
         print(f"Retrieved contributors info for {repo.name}")
-    return [contributor.to_dict() for contributor in contributors_info.values()]
+
+    # Sort contributors by contribution count and return.
+    sorted_contributors = sorted(
+        contributors_info.values(), key=lambda c: c.contributions, reverse=True
+    )
+    return [contributor.to_dict() for contributor in sorted_contributors]
 
 
 if __name__ == "__main__":
