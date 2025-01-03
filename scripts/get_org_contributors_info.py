@@ -17,7 +17,7 @@ FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = os.getenv("ORG_NAME")
 OUTPUT_PATH = os.getenv("OUTPUT_PATH")
-
+BOT_ACCOUNTS = os.getenv("BOT_ACCOUNTS", "").split(",")
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN environment variable not set")
@@ -184,7 +184,7 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
     print("Retrieving contributors info...")
     for repo in public_repos:
         for contributor in repo.get_contributors():
-            if "[bot]" in contributor.login:
+            if "[bot]" in contributor.login or contributor.login in BOT_ACCOUNTS:
                 continue  # Skip bot contributors
             if contributor.login not in contributors_info:
                 contributors_info[contributor.login] = ContributorInfo(
