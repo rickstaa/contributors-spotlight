@@ -2,21 +2,21 @@
  * @file Contains the control panel for the contributors grid.
  */
 import { Badge } from "@/components/ui/badge";
-import { FaEye, FaEyeSlash, FaSun, FaMoon } from "react-icons/fa";
 import { useTheme } from "next-themes";
+import { FaEye, FaEyeSlash, FaMoon, FaSun } from "react-icons/fa";
 
 /**
  * Represents the properties of the contributors control panel component.
  */
 interface ContributorsControlPanelProps {
   /** Whether to hide organization members. */
-  hideOrgMembers: boolean;
-  /** Whether to show yearly contributions. */
-  showYearlyContributions: boolean;
-  /** Function to set whether to hide organization members. */
-  setHideOrgMembers: (value: boolean) => void;
-  /** Function to set whether to show yearly contributions */
-  setShowYearlyContributions: (value: boolean) => void;
+  excludeOrgMembers: boolean;
+  /** Whether to show last year's contributions. */
+  displayLastYearContributions: boolean;
+  /** Function to set whether to exclude organization members. */
+  setExcludeOrgMembers: (value: boolean) => void;
+  /** Function to set whether to display last year's contributions. */
+  setDisplayLastYearContributions: (value: boolean) => void;
 }
 
 /**
@@ -24,10 +24,10 @@ interface ContributorsControlPanelProps {
  * @param props - The component properties.
  */
 export const ControlPanel = ({
-  hideOrgMembers,
-  showYearlyContributions,
-  setHideOrgMembers,
-  setShowYearlyContributions,
+  excludeOrgMembers,
+  displayLastYearContributions,
+  setExcludeOrgMembers,
+  setDisplayLastYearContributions,
 }: ContributorsControlPanelProps) => {
   const { theme, setTheme } = useTheme();
 
@@ -35,13 +35,13 @@ export const ControlPanel = ({
     <div className="flex items-center mb-4 space-x-4">
       <Badge
         className={`cursor-pointer ${
-          hideOrgMembers
+          excludeOrgMembers
             ? "bg-gray-500 text-white"
             : "bg-livepeer text-white hover:bg-green-700"
         }`}
-        onClick={() => setHideOrgMembers(!hideOrgMembers)}
+        onClick={() => setExcludeOrgMembers(!excludeOrgMembers)}
       >
-        {hideOrgMembers ? (
+        {excludeOrgMembers ? (
           <FaEyeSlash className="mr-2" />
         ) : (
           <FaEye className="mr-2" />
@@ -50,13 +50,15 @@ export const ControlPanel = ({
       </Badge>
       <Badge
         className={`cursor-pointer ${
-          showYearlyContributions
+          displayLastYearContributions
             ? "bg-livepeer text-white hover:bg-green-700"
             : "bg-gray-500 text-white"
         }`}
-        onClick={() => setShowYearlyContributions(!showYearlyContributions)}
+        onClick={() =>
+          setDisplayLastYearContributions(!displayLastYearContributions)
+        }
       >
-        {showYearlyContributions ? (
+        {displayLastYearContributions ? (
           <FaEye className="mr-2" />
         ) : (
           <FaEyeSlash className="mr-2" />

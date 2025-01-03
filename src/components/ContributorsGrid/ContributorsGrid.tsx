@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
 import { Contributor } from "@/types";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
@@ -30,18 +31,18 @@ const ITEMS_PER_PAGE = 16;
  * @param props - Component properties.
  */
 export const ContributorsGrid = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hideOrgMembers, setHideOrgMembers] = useLocalStorage(
-    "hideOrgMembers",
+  const [excludeOrgMembers, setExcludeOrgMembers] = useLocalStorage(
+    "excludeOrgMembers",
     false
   );
-  const [showYearlyContributions, setShowYearlyContributions] = useLocalStorage(
-    "showYearlyContributions",
-    false
-  );
+  const [displayLastYearContributions, setDisplayLastYearContributions] =
+    useLocalStorage("displayLastYearContributions", false);
 
   // Fetch contributors from the API.
   useEffect(() => {
@@ -65,6 +66,32 @@ export const ContributorsGrid = () => {
     fetchContributors();
   }, []);
 
+  // Overwrite state with query parameters if they are present
+  useEffect(() => {
+    const excludeOrgParam = searchParams.get("excludeOrgMembers");
+    const yearlyContribParam = searchParams.get("lastYearContrib");
+
+    if (excludeOrgParam !== null) {
+      setExcludeOrgMembers(excludeOrgParam === "true");
+    }
+
+    if (yearlyContribParam !== null) {
+      setDisplayLastYearContributions(yearlyContribParam === "true");
+    }
+  }, [searchParams, setExcludeOrgMembers, setDisplayLastYearContributions]);
+
+  // Update the URL query params when the state changes.
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (excludeOrgMembers) {
+      params.set("excludeOrgMembers", "true");
+    }
+    if (displayLastYearContributions) {
+      params.set("lastYearContrib", "true");
+    }
+    router.replace(`?${params.toString()}`);
+  }, [excludeOrgMembers, displayLastYearContributions, router]);
+
   /**
    * Changes the pagination page.
    * @param page - The page number.
@@ -76,14 +103,14 @@ export const ContributorsGrid = () => {
   // Calculate filtered and sorted contributors based on the state.
   const filteredContributors = contributors
     .filter(
-      (contributor) => !hideOrgMembers || !isOrgMember(contributor, ORG_NAME)
+      (contributor) => !excludeOrgMembers || !isOrgMember(contributor, ORG_NAME)
     )
     .filter(
       (contributor) =>
-        !showYearlyContributions || contributor.yearly_contributions > 0
+        !displayLastYearContributions || contributor.yearly_contributions > 0
     )
     .sort((a, b) =>
-      showYearlyContributions
+      displayLastYearContributions
         ? b.yearly_contributions - a.yearly_contributions
         : b.contributions - a.contributions
     );
@@ -134,10 +161,10 @@ export const ContributorsGrid = () => {
     <div className="flex flex-col items-center">
       {/* Control Panel */}
       <ControlPanel
-        hideOrgMembers={hideOrgMembers}
-        showYearlyContributions={showYearlyContributions}
-        setHideOrgMembers={setHideOrgMembers}
-        setShowYearlyContributions={setShowYearlyContributions}
+        excludeOrgMembers={excludeOrgMembers}
+        displayLastYearContributions={displayLastYearContributions}
+        setExcludeOrgMembers={setExcludeOrgMembers}
+        setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
       {/* Contributor Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4 w-full items-start min-h-[500px] mt-4">
@@ -195,7 +222,7 @@ export const ContributorsGrid = () => {
               <p className="text-sm text-gray-500">
                 Contributions:{" "}
                 {formatCompactNumber(
-                  showYearlyContributions
+                  displayLastYearContributions
                     ? contributor.yearly_contributions
                     : contributor.contributions
                 )}
