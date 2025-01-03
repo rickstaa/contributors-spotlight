@@ -2,6 +2,8 @@
  * @file Contains the contributors info grid component.
  */
 "use client";
+import tailwindConfig from "@/../tailwind.config";
+import { ORG_NAME } from "@/app/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
@@ -9,17 +11,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ControlPanel } from "./ControlPanel";
+import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
 import { Contributor } from "@/types";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
-import { isOrgMember, formatCompactNumber, truncateString } from "@/lib/utils";
+import resolveConfig from "tailwindcss/resolveConfig";
+import { useLocalStorage } from "usehooks-ts";
+import { ControlPanel } from "./ControlPanel";
 import { HoverCard } from "./HoverCard";
 import { Pagination } from "./Pagination";
-import { ORG_NAME } from "@/app/config";
-import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig from "@/../tailwind.config";
 const twConfig = resolveConfig(tailwindConfig);
 
 const ITEMS_PER_PAGE = 16;
@@ -33,8 +34,14 @@ export const ContributorsGrid = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hideOrgMembers, setHideOrgMembers] = useState(false);
-  const [showYearlyContributions, setShowYearlyContributions] = useState(false);
+  const [hideOrgMembers, setHideOrgMembers] = useLocalStorage(
+    "hideOrgMembers",
+    false
+  );
+  const [showYearlyContributions, setShowYearlyContributions] = useLocalStorage(
+    "showYearlyContributions",
+    false
+  );
 
   // Fetch contributors from the API.
   useEffect(() => {
