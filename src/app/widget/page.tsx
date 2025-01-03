@@ -8,7 +8,7 @@ import { ContributorsGrid } from "@/components/ContributorsGrid/ContributorsGrid
  */
 const ContributorsInfoWidget = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen py-8">
       <ContributorsGrid />
     </div>
   );

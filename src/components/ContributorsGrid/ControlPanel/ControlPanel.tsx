@@ -2,7 +2,8 @@
  * @file Contains the control panel for the contributors grid.
  */
 import { Badge } from "@/components/ui/badge";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaSun, FaMoon } from "react-icons/fa";
+import { useTheme } from "next-themes";
 
 /**
  * Represents the properties of the contributors control panel component.
@@ -28,6 +29,8 @@ export const ControlPanel = ({
   setHideOrgMembers,
   setShowYearlyContributions,
 }: ContributorsControlPanelProps) => {
+  const { theme, setTheme } = useTheme();
+
   return (
     <div className="flex items-center mb-4 space-x-4">
       <Badge
@@ -59,6 +62,21 @@ export const ControlPanel = ({
           <FaEyeSlash className="mr-2" />
         )}{" "}
         Yearly Contributions
+      </Badge>
+      <Badge
+        className={`cursor-pointer ${
+          theme === "light"
+            ? "bg-black text-white hover:bg-gray-800"
+            : "bg-white text-black hover:bg-gray-200"
+        }`}
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
+        {theme === "light" ? (
+          <FaMoon className="mr-2" />
+        ) : (
+          <FaSun className="mr-2" />
+        )}
+        {theme === "light" ? "Dark Mode" : "Light Mode"}
       </Badge>
     </div>
   );
