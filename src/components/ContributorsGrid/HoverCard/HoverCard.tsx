@@ -41,7 +41,7 @@ export const HoverCard = ({
   const noInfo = !bio && !company && !location && !twitter_username;
 
   return (
-    <UIHoverCard>
+    <UIHoverCard openDelay={500} closeDelay={500}>
       <HoverCardTrigger asChild>{children}</HoverCardTrigger>
       <HoverCardContent>
         <div className="p-1">

@@ -54,9 +54,9 @@ export const ControlPanel = ({
         onClick={() => setShowYearlyContributions(!showYearlyContributions)}
       >
         {showYearlyContributions ? (
-          <FaEyeSlash className="mr-2" />
-        ) : (
           <FaEye className="mr-2" />
+        ) : (
+          <FaEyeSlash className="mr-2" />
         )}{" "}
         Yearly Contributions
       </Badge>
