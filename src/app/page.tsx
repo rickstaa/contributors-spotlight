@@ -2,6 +2,7 @@
  * @file Contains the application home page.
  */
 import { ContributorsGrid } from "@/components/ContributorsGrid/ContributorsGrid";
+import { Suspense } from "react";
 
 /**
  * Home page component.
@@ -16,7 +17,9 @@ const Home = () => {
         Celebrating the invaluable contributions of our open-source community!
       </h5>
       <div className="flex justify-center mt-6">
-        <ContributorsGrid />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ContributorsGrid />
+        </Suspense>
       </div>
     </>
   );

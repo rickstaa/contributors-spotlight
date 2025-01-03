@@ -22,6 +22,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
 import { HoverCard } from "./HoverCard";
 import { Pagination } from "./Pagination";
+
 const twConfig = resolveConfig(tailwindConfig);
 
 const ITEMS_PER_PAGE = 16;
