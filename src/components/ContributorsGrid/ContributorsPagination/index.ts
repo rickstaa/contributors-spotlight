@@ -1,1 +1,0 @@
-export { ContributorsPagination } from "./ContributorsPagination";

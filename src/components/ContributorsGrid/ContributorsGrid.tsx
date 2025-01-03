@@ -9,14 +9,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
+import { ControlPanel } from "./ControlPanel";
 import { Contributor } from "@/types";
 import { useEffect, useState } from "react";
-import { FaExclamationTriangle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 import { isOrgMember, formatCompactNumber, truncateString } from "@/lib/utils";
-import { ContributorHoverCard } from "./ContributorHoverCard";
-import { ContributorsPagination } from "./ContributorsPagination";
+import { HoverCard } from "./HoverCard";
+import { Pagination } from "./Pagination";
 import { ORG_NAME } from "@/app/config";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "@/../tailwind.config";
@@ -126,38 +126,12 @@ export const ContributorsGrid = () => {
   return (
     <div className="flex flex-col items-center">
       {/* Control Panel */}
-      <div className="flex items-center mb-4 space-x-4">
-        <Badge
-          className={`cursor-pointer ${
-            hideOrgMembers
-              ? "bg-gray-500 text-white"
-              : "bg-livepeer text-white hover:bg-green-700"
-          }`}
-          onClick={() => setHideOrgMembers(!hideOrgMembers)}
-        >
-          {hideOrgMembers ? (
-            <FaEyeSlash className="mr-2" />
-          ) : (
-            <FaEye className="mr-2" />
-          )}{" "}
-          Org Members
-        </Badge>
-        <Badge
-          className={`cursor-pointer ${
-            showYearlyContributions
-              ? "bg-livepeer text-white hover:bg-green-700"
-              : "bg-gray-500 text-white"
-          }`}
-          onClick={() => setShowYearlyContributions(!showYearlyContributions)}
-        >
-          {showYearlyContributions ? (
-            <FaEyeSlash className="mr-2" />
-          ) : (
-            <FaEye className="mr-2" />
-          )}{" "}
-          Yearly Contributions
-        </Badge>
-      </div>
+      <ControlPanel
+        hideOrgMembers={hideOrgMembers}
+        showYearlyContributions={showYearlyContributions}
+        setHideOrgMembers={setHideOrgMembers}
+        setShowYearlyContributions={setShowYearlyContributions}
+      />
       {/* Contributor Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4 w-full items-start min-h-[500px] mt-4">
         {selectedContributors.map((contributor) => {
@@ -169,10 +143,7 @@ export const ContributorsGrid = () => {
               key={contributor.login}
               className="flex flex-col items-center w-32 h-32"
             >
-              <ContributorHoverCard
-                key={contributor.login}
-                contributor={contributor}
-              >
+              <HoverCard key={contributor.login} contributor={contributor}>
                 <a
                   href={`https://github.com/${contributor.login}`}
                   target="_blank"
@@ -195,7 +166,7 @@ export const ContributorsGrid = () => {
                     </AvatarFallback>
                   </Avatar>
                 </a>
-              </ContributorHoverCard>
+              </HoverCard>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -235,7 +206,7 @@ export const ContributorsGrid = () => {
       </div>
       {/* Pagination widget */}
       <div className="mt-4 flex justify-center w-full">
-        <ContributorsPagination
+        <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}

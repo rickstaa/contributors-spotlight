@@ -3,7 +3,7 @@
  */
 import { useMemo } from "react";
 import {
-  Pagination,
+  Pagination as UIPagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
@@ -30,7 +30,7 @@ interface ContributorsPaginationProps {
  * Pagination component for the contributors grid.
  * @param props - Component properties.
  */
-export const ContributorsPagination = ({
+export const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
@@ -128,7 +128,7 @@ export const ContributorsPagination = ({
   }, [currentPage, totalPages, onPageChange]);
 
   return (
-    <Pagination>
+    <UIPagination>
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>
@@ -155,8 +155,8 @@ export const ContributorsPagination = ({
           />
         </PaginationItem>
       </PaginationContent>
-    </Pagination>
+    </UIPagination>
   );
 };
 
-export default ContributorsPagination;
+export default Pagination;

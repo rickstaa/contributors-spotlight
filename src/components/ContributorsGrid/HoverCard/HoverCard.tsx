@@ -2,7 +2,7 @@
  * @file Contains hover card for displaying GitHub contributor info.
  */
 import {
-  HoverCard,
+  HoverCard as UIHoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
@@ -31,7 +31,7 @@ interface ContributorHoverCardProps {
  * Component that displays a hover card with GitHub contributor information.
  * @param props - The component properties.
  */
-export const ContributorHoverCard = ({
+export const HoverCard = ({
   contributor,
   children,
 }: ContributorHoverCardProps) => {
@@ -41,7 +41,7 @@ export const ContributorHoverCard = ({
   const noInfo = !bio && !company && !location && !twitter_username;
 
   return (
-    <HoverCard>
+    <UIHoverCard>
       <HoverCardTrigger asChild>{children}</HoverCardTrigger>
       <HoverCardContent>
         <div className="p-1">
@@ -107,8 +107,8 @@ export const ContributorHoverCard = ({
           )}
         </div>
       </HoverCardContent>
-    </HoverCard>
+    </UIHoverCard>
   );
 };
 
-export default ContributorHoverCard;
+export default HoverCard;

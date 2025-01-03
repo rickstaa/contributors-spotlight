@@ -1,1 +1,0 @@
-export { ContributorHoverCard } from "./ContributorHoverCard";
