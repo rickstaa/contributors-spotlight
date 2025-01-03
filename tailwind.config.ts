@@ -56,6 +56,9 @@ export default {
       borderColor: {
         livepeer: "#30a46c",
       },
+      backgroundColor: {
+        livepeer: "#30a46c",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

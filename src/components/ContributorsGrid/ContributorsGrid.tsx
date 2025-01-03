@@ -9,9 +9,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { Contributor } from "@/types";
 import { useEffect, useState } from "react";
-import { FaExclamationTriangle } from "react-icons/fa";
+import { FaExclamationTriangle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 import { isOrgMember, formatCompactNumber, truncateString } from "@/lib/utils";
 import { ContributorHoverCard } from "./ContributorHoverCard";
@@ -32,6 +33,8 @@ export const ContributorsGrid = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hideOrgMembers, setHideOrgMembers] = useState(false);
+  const [showYearlyContributions, setShowYearlyContributions] = useState(false);
 
   // Fetch contributors from the API.
   useEffect(() => {
@@ -63,12 +66,37 @@ export const ContributorsGrid = () => {
     setCurrentPage(page);
   };
 
-  // Calculate pagination details and retrieve contributors for the current page.
-  const totalPages = Math.ceil((contributors?.length || 0) / ITEMS_PER_PAGE);
+  // Calculate filtered and sorted contributors based on the state.
+  const filteredContributors = contributors
+    .filter(
+      (contributor) => !hideOrgMembers || !isOrgMember(contributor, ORG_NAME)
+    )
+    .filter(
+      (contributor) =>
+        !showYearlyContributions || contributor.yearly_contributions > 0
+    )
+    .sort((a, b) =>
+      showYearlyContributions
+        ? b.yearly_contributions - a.yearly_contributions
+        : b.contributions - a.contributions
+    );
+
+  // Calculate pagination details.
+  const totalPages = Math.ceil(filteredContributors.length / ITEMS_PER_PAGE);
+
+  // Adjust current page if it is out of range.
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages > 0 ? totalPages : 1);
+    }
+  }, [totalPages, currentPage]);
+
+  // Calculate contributors for the current page.
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const selectedContributors = (contributors || [])
-    .sort((a, b) => b.contributions - a.contributions)
-    .slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const selectedContributors = filteredContributors.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
 
   // Render loading spinner or error message if needed.
   if (loading) {
@@ -94,7 +122,41 @@ export const ContributorsGrid = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4 w-full items-start min-h-[500px]">
+      {/* Control Panel */}
+      <div className="flex items-center mb-4 space-x-4">
+        <Badge
+          className={`cursor-pointer ${
+            hideOrgMembers
+              ? "bg-gray-500 text-white"
+              : "bg-livepeer text-white hover:bg-green-700"
+          }`}
+          onClick={() => setHideOrgMembers(!hideOrgMembers)}
+        >
+          {hideOrgMembers ? (
+            <FaEyeSlash className="mr-2" />
+          ) : (
+            <FaEye className="mr-2" />
+          )}{" "}
+          Org Members
+        </Badge>
+        <Badge
+          className={`cursor-pointer ${
+            showYearlyContributions
+              ? "bg-livepeer text-white hover:bg-green-700"
+              : "bg-gray-500 text-white"
+          }`}
+          onClick={() => setShowYearlyContributions(!showYearlyContributions)}
+        >
+          {showYearlyContributions ? (
+            <FaEyeSlash className="mr-2" />
+          ) : (
+            <FaEye className="mr-2" />
+          )}{" "}
+          Yearly Contributions
+        </Badge>
+      </div>
+      {/* Contributor Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4 w-full items-start min-h-[500px] mt-4">
         {selectedContributors.map((contributor) => {
           const truncatedName = truncateString(contributor.login, 15);
           const isTruncated = truncatedName !== contributor.login;
@@ -150,7 +212,12 @@ export const ContributorsGrid = () => {
                 </Tooltip>
               </TooltipProvider>
               <p className="text-sm text-gray-500">
-                Contributions: {formatCompactNumber(contributor.contributions)}
+                Contributions:{" "}
+                {formatCompactNumber(
+                  showYearlyContributions
+                    ? contributor.yearly_contributions
+                    : contributor.contributions
+                )}
               </p>
             </div>
           );
