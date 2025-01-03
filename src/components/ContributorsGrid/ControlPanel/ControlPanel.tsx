@@ -61,7 +61,7 @@ export const ControlPanel = ({
         ) : (
           <FaEyeSlash className="mr-2" />
         )}{" "}
-        Yearly Contributions
+        Last Year Contributions
       </Badge>
       <Badge
         className={`cursor-pointer ${
