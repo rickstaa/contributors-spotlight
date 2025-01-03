@@ -98,6 +98,9 @@ export const ContributorsGrid = () => {
     startIndex + ITEMS_PER_PAGE
   );
 
+  // Calculate the number of placeholders needed.
+  const placeholdersCount = ITEMS_PER_PAGE - selectedContributors.length;
+
   // Render loading spinner or error message if needed.
   if (loading) {
     return (
@@ -222,6 +225,13 @@ export const ContributorsGrid = () => {
             </div>
           );
         })}
+        {/* Add placeholders to fill the empty spaces */}
+        {Array.from({ length: placeholdersCount }).map((_, index) => (
+          <div
+            key={`placeholder-${index}`}
+            className="flex flex-col items-center w-32 h-32"
+          />
+        ))}
       </div>
       {/* Pagination widget */}
       <div className="mt-4 flex justify-center w-full">
