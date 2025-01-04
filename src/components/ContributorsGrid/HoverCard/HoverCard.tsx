@@ -16,6 +16,7 @@ import { Contributor } from "@/types";
 import { Briefcase, Link, MapPin } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
 import { ORG_NAME } from "@/app/config";
+import { FaGithub } from "react-icons/fa";
 
 /**
  * Represents the properties of the contributor hover card component.
@@ -38,7 +39,6 @@ export const HoverCard = ({
   const { name, login, bio, company, location, twitter_username, blog_url } =
     contributor;
   const isEmployee = isOrgMember(contributor, ORG_NAME);
-  const noInfo = !bio && !company && !location && !twitter_username;
 
   return (
     <UIHoverCard openDelay={500} closeDelay={500}>
@@ -46,14 +46,22 @@ export const HoverCard = ({
       <HoverCardContent>
         <div className="p-1">
           <p className="font-bold">{capitalize(name || login)}</p>
-          {noInfo && (
-            <p className="text-sm text-gray-500">No info available.</p>
-          )}
           {bio && (
             <div className="flex items-center mt-2">
               <p className="text-sm text-gray-500 break-words">{bio}</p>
             </div>
           )}
+          <div className="flex items-center mt-2">
+            <FaGithub className="w-4 h-4 mr-2 text-gray-500" />
+            <a
+              href={`https://github.com/${login}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500"
+            >
+              {login}
+            </a>
+          </div>
           {blog_url && (
             <div className="flex items-center mt-2">
               <Link className="w-4 h-4 mr-2 text-gray-500" />
@@ -99,9 +107,7 @@ export const HoverCard = ({
                   isEmployee ? "text-livepeer" : "text-gray-500"
                 }`}
               >
-                {isEmployee
-                  ? "Livepeer"
-                  : capitalize(cleanCompanyName(company))}
+                {isEmployee ? ORG_NAME : capitalize(cleanCompanyName(company))}
               </p>
             </div>
           )}

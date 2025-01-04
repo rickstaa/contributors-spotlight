@@ -1,4 +1,4 @@
-name: Fetch Livepeer Organization Contributors Info
+name: Fetch Livepee Organization Contributors Info
 
 on:
   schedule:

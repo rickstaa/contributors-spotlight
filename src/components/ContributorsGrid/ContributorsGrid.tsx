@@ -141,41 +141,40 @@ export const ContributorsGrid = () => {
               className="flex flex-col items-center w-32 h-32"
             >
               <HoverCard key={contributor.login} contributor={contributor}>
-                <a
-                  href={`https://github.com/${contributor.login}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transform transition-transform duration-300 hover:scale-110"
+                <Avatar
+                  className={`w-14 h-14 avatar-hover-animation ${
+                    isOrgMember(contributor, ORG_NAME)
+                      ? "border-2 border-livepeer"
+                      : "border-2"
+                  }`}
                 >
-                  <Avatar
-                    className={`w-14 h-14 ${
-                      isOrgMember(contributor, ORG_NAME)
-                        ? "border-2 border-livepeer"
-                        : "border-2"
-                    }`}
-                  >
-                    <AvatarImage
-                      src={contributor.avatar_url}
-                      alt={contributor.login}
-                    />
-                    <AvatarFallback className="w-full h-full">
-                      {contributor.login[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                </a>
+                  <AvatarImage
+                    src={contributor.avatar_url}
+                    alt={contributor.login}
+                  />
+                  <AvatarFallback className="w-full h-full">
+                    {contributor.login[0]}
+                  </AvatarFallback>
+                </Avatar>
               </HoverCard>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <p
-                      className={`mt-2 text-center ${
-                        isOrgMember(contributor, ORG_NAME)
-                          ? "text-livepeer"
-                          : ""
-                      }`}
+                    <a
+                      href={`https://github.com/${contributor.login}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      {truncatedName}
-                    </p>
+                      <p
+                        className={`mt-2 text-center ${
+                          isOrgMember(contributor, ORG_NAME)
+                            ? "text-livepeer"
+                            : ""
+                        }`}
+                      >
+                        {truncatedName}
+                      </p>
+                    </a>
                   </TooltipTrigger>
                   {isTruncated && (
                     <TooltipContent>{contributor.login}</TooltipContent>

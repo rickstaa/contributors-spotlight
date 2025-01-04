@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/context/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ORG_NAME } from "./config";
 
 /**
  * Geist Sans font.
@@ -26,9 +27,8 @@ const geistMono = Geist_Mono({
  * Metadata for the application.
  */
 export const metadata: Metadata = {
-  title: "Livepeer Contributors Spotlight",
-  description:
-    "Web app showcasing the open-source contributors behind Livepeer software",
+  title: `${ORG_NAME} Contributors Spotlight`,
+  description: `Web app showcasing the open-source contributors behind ${ORG_NAME} software`,
 };
 
 /**
