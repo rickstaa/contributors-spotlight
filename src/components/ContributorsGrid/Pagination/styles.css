@@ -1,0 +1,7 @@
+/* Hide the span with text on mobile */
+@media (max-width: 640px) {
+  .pagination-next span,
+  .pagination-previous span {
+    display: none;
+  }
+}

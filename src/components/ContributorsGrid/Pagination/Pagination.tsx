@@ -11,6 +11,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import "./styles.css";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MAX_PAGES_TO_SHOW = 5;
 
@@ -129,31 +131,38 @@ export const Pagination = ({
 
   return (
     <UIPagination>
-      <PaginationContent>
-        {/* Previous Button */}
-        <PaginationItem>
-          <PaginationPrevious
-            href="#"
-            aria-disabled={currentPage <= 1}
-            tabIndex={currentPage <= 1 ? -1 : undefined}
-            onClick={() => onPageChange(currentPage - 1)}
-            className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
-          />
-        </PaginationItem>
-        {/* Pages Buttons */}
-        {renderPaginationItems}
-        {/* Next Button */}
-        <PaginationItem>
-          <PaginationNext
-            href="#"
-            aria-disabled={currentPage === totalPages}
-            tabIndex={currentPage === totalPages ? -1 : undefined}
-            onClick={() => onPageChange(currentPage + 1)}
-            className={
-              currentPage === totalPages ? "pointer-events-none opacity-50" : ""
-            }
-          />
-        </PaginationItem>
+      <PaginationContent className="mb-4">
+        {totalPages < 1 ? (
+          <Skeleton className="w-[340px] h-9" />
+        ) : (
+          <>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                aria-disabled={currentPage <= 1}
+                tabIndex={currentPage <= 1 ? -1 : undefined}
+                onClick={() => onPageChange(currentPage - 1)}
+                className={`pagination-previous ${
+                  currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+                }`}
+              />
+            </PaginationItem>
+            {renderPaginationItems}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                aria-disabled={currentPage === totalPages}
+                tabIndex={currentPage === totalPages ? -1 : undefined}
+                onClick={() => onPageChange(currentPage + 1)}
+                className={`pagination-next ${
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }`}
+              />
+            </PaginationItem>
+          </>
+        )}
       </PaginationContent>
     </UIPagination>
   );
