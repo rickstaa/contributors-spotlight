@@ -55,6 +55,7 @@ export const ContributorsGrid = () => {
   useEffect(() => {
     const showOrgMembers = searchParams.get("orgMembers");
     const yearlyContribParam = searchParams.get("lastYearContrib");
+    const pageParam = searchParams.get("page");
 
     if (showOrgMembers !== null) {
       setExcludeOrgMembers(showOrgMembers !== "true");
@@ -63,7 +64,16 @@ export const ContributorsGrid = () => {
     if (yearlyContribParam !== null) {
       setDisplayLastYearContributions(yearlyContribParam === "true");
     }
-  }, [searchParams, setExcludeOrgMembers, setDisplayLastYearContributions]);
+
+    if (pageParam !== null) {
+      setCurrentPage(parseInt(pageParam, 10) || 1);
+    }
+  }, [
+    searchParams,
+    setExcludeOrgMembers,
+    setDisplayLastYearContributions,
+    setCurrentPage,
+  ]);
 
   // Update the URL query params when the state changes.
   useEffect(() => {
@@ -74,8 +84,11 @@ export const ContributorsGrid = () => {
     if (displayLastYearContributions) {
       params.set("lastYear", "true");
     }
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
+    }
     router.replace(`?${params.toString()}`);
-  }, [excludeOrgMembers, displayLastYearContributions, router]);
+  }, [excludeOrgMembers, displayLastYearContributions, currentPage, router]);
 
   /**
    * Changes the pagination page.
@@ -105,7 +118,7 @@ export const ContributorsGrid = () => {
 
   // Adjust current page if it is out of range.
   useEffect(() => {
-    if (currentPage > totalPages) {
+    if (totalPages > 0 && currentPage > totalPages) {
       setCurrentPage(totalPages > 0 ? totalPages : 1);
     }
   }, [totalPages, currentPage]);

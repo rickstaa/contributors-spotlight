@@ -107,8 +107,8 @@ export const ControlPanel = ({
           </TooltipTrigger>
           <TooltipContent side="bottom">
             {displayLastYearContributions
-              ? "Hide last year contributors"
-              : "Show last year contributors"}
+              ? "Show all contributors"
+              : "Show last year's contributors"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
