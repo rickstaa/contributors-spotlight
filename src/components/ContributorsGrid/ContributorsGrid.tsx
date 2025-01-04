@@ -31,11 +31,11 @@ export const ContributorsGrid = () => {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [excludeOrgMembers, setExcludeOrgMembers] = useLocalStorage(
-    "excludeOrgMembers",
+    "orgMembers",
     false
   );
   const [displayLastYearContributions, setDisplayLastYearContributions] =
-    useLocalStorage("displayLastYearContributions", false);
+    useLocalStorage("lastYear", false);
 
   // Fetch contributors from the API.
   useEffect(() => {
@@ -53,11 +53,11 @@ export const ContributorsGrid = () => {
 
   // Overwrite state with query parameters if they are present
   useEffect(() => {
-    const excludeOrgParam = searchParams.get("excludeOrgMembers");
+    const showOrgMembers = searchParams.get("orgMembers");
     const yearlyContribParam = searchParams.get("lastYearContrib");
 
-    if (excludeOrgParam !== null) {
-      setExcludeOrgMembers(excludeOrgParam === "true");
+    if (showOrgMembers !== null) {
+      setExcludeOrgMembers(showOrgMembers !== "true");
     }
 
     if (yearlyContribParam !== null) {
@@ -69,10 +69,10 @@ export const ContributorsGrid = () => {
   useEffect(() => {
     const params = new URLSearchParams();
     if (excludeOrgMembers) {
-      params.set("excludeOrgMembers", "true");
+      params.set("orgMembers", "false");
     }
     if (displayLastYearContributions) {
-      params.set("lastYearContrib", "true");
+      params.set("lastYear", "true");
     }
     router.replace(`?${params.toString()}`);
   }, [excludeOrgMembers, displayLastYearContributions, router]);
