@@ -2,7 +2,6 @@
  * @file Contains the contributors info grid component.
  */
 "use client";
-import tailwindConfig from "@/../tailwind.config";
 import { ORG_NAME } from "@/app/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -15,15 +14,10 @@ import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
 import { Contributor } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { ClipLoader } from "react-spinners";
-import resolveConfig from "tailwindcss/resolveConfig";
 import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
 import { HoverCard } from "./HoverCard";
 import { Pagination } from "./Pagination";
-
-const twConfig = resolveConfig(tailwindConfig);
 
 const ITEMS_PER_PAGE = 16;
 
@@ -36,8 +30,6 @@ export const ContributorsGrid = () => {
   const searchParams = useSearchParams();
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [excludeOrgMembers, setExcludeOrgMembers] = useLocalStorage(
     "excludeOrgMembers",
     false
@@ -48,20 +40,12 @@ export const ContributorsGrid = () => {
   // Fetch contributors from the API.
   useEffect(() => {
     const fetchContributors = async () => {
-      try {
-        const res = await fetch("/api/contributors");
-        if (!res.ok) {
-          throw new Error("Failed to fetch contributors");
-        }
-        const data = await res.json();
-        setContributors(data || []);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-      } finally {
-        setLoading(false);
+      const res = await fetch("/api/contributors");
+      if (!res.ok) {
+        throw new Error("Failed to fetch contributors");
       }
+      const data = await res.json();
+      setContributors(data || []);
     };
 
     fetchContributors();
@@ -135,28 +119,6 @@ export const ContributorsGrid = () => {
 
   // Calculate the number of placeholders needed.
   const placeholdersCount = ITEMS_PER_PAGE - selectedContributors.length;
-
-  // Render loading spinner or error message if needed.
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <ClipLoader
-          color={twConfig.theme.colors.livepeer}
-          size={50}
-          loading={loading}
-        />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-[500px]">
-        <FaExclamationTriangle className="text-red-500 text-6xl mb-4" />
-        <h1 className="text-red-500 text-2xl">Oops! Something went wrong.</h1>
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center">

@@ -1,9 +1,9 @@
 /**
  * @file Contains the root layout component for the application.
  */
+import { ThemeProvider } from "@/context/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "@/context/ThemeProvider";
 import "./globals.css";
 
 /**

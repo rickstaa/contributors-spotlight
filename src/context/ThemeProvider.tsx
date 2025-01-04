@@ -2,13 +2,13 @@
  * @file Contains ChadCN theme provider context.
  */
 "use client";
-import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import * as React from "react";
 
 /**
  * ChadCN theme provider context.
- * @param param0
- * @returns
+ * @param props - The component properties.
+ * @returns The ChadCN theme provider context.
  */
 export function ThemeProvider({
   children,

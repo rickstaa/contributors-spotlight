@@ -2,8 +2,10 @@
  * @file Contains the application home page.
  */
 import { ContributorsGrid } from "@/components/ContributorsGrid/ContributorsGrid";
+import { ErrorDisplay } from "@/components/ErrorDisplay/ErrorDisplay";
+import { LoadingSpinner } from "@/components/LoadingSpinner/LoadingSpinner";
 import { Suspense } from "react";
-
+import { ErrorBoundary } from "react-error-boundary";
 /**
  * Home page component.
  */
@@ -17,9 +19,13 @@ const Home = () => {
         Celebrating the invaluable contributions of our open-source community!
       </h5>
       <div className="flex justify-center mt-6">
-        <Suspense fallback={<div>Loading...</div>}>
-          <ContributorsGrid />
-        </Suspense>
+        <ErrorBoundary
+          fallback={<ErrorDisplay message="Failed to load contributors" />}
+        >
+          <Suspense fallback={<LoadingSpinner />}>
+            <ContributorsGrid />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </>
   );

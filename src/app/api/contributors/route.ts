@@ -1,11 +1,11 @@
 /**
  * @file Contains API route that serves information about organization contributors.
  */
+import { CONTRIBUTORS_SOURCE } from "@/app/config";
 import { isValidUrl } from "@/lib/utils";
 import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
 import { join } from "path";
-import { CONTRIBUTORS_SOURCE } from "@/app/config";
 
 /**
  * Fetches contributors data from either a local file or an external URL.
