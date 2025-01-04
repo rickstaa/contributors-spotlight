@@ -1,7 +1,15 @@
-/* Hide the span with text on mobile */
+/* Hide the next and previous text on mobile */
 @media (max-width: 640px) {
   .pagination-next span,
   .pagination-previous span {
     display: none;
+  }
+}
+
+/* Reduce the padding on small mobile screens */
+@media (max-width: 380px) {
+  .pagination-next,
+  .pagination-previous {
+    padding: 0 0.5rem;
   }
 }

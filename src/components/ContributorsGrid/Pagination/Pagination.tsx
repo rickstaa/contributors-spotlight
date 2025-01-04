@@ -131,7 +131,7 @@ export const Pagination = ({
 
   return (
     <UIPagination>
-      <PaginationContent className="mb-4">
+      <PaginationContent>
         {totalPages < 1 ? (
           <Skeleton className="w-[340px] h-9" />
         ) : (

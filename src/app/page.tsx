@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center my-4">
         <ErrorBoundary
           fallback={<ErrorDisplay message="Failed to load contributors" />}
         >
