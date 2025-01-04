@@ -142,9 +142,9 @@ export const Pagination = ({
                 aria-disabled={currentPage <= 1}
                 tabIndex={currentPage <= 1 ? -1 : undefined}
                 onClick={() => onPageChange(currentPage - 1)}
-                className={`pagination-previous ${
-                  currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-                }`}
+                className={`${
+                  totalPages > 4 ? "pagination-previous-mobile" : ""
+                } ${currentPage <= 1 ? "pointer-events-none opacity-50" : ""}`}
               />
             </PaginationItem>
             {renderPaginationItems}
@@ -154,7 +154,7 @@ export const Pagination = ({
                 aria-disabled={currentPage === totalPages}
                 tabIndex={currentPage === totalPages ? -1 : undefined}
                 onClick={() => onPageChange(currentPage + 1)}
-                className={`pagination-next ${
+                className={`${totalPages > 4 ? "pagination-next-mobile" : ""} ${
                   currentPage === totalPages
                     ? "pointer-events-none opacity-50"
                     : ""
