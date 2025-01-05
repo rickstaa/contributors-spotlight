@@ -38,8 +38,9 @@ export const ControlPanel = ({
   setDisplayLastYearContributions,
 }: ContributorsControlPanelProps) => {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const isDarkMode = theme === "dark";
+  const { resolvedTheme, setTheme } = useTheme();
+
+  const isDarkMode = resolvedTheme === "dark";
 
   useEffect(() => {
     setMounted(true);

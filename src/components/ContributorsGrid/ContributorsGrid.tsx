@@ -19,7 +19,9 @@ import { ControlPanel } from "./ControlPanel";
 import { HoverCard } from "./HoverCard";
 import { Pagination } from "./Pagination";
 
-const ITEMS_PER_PAGE = 16;
+const ITEMS_PER_PAGE_DESKTOP = 20;
+const ITEMS_PER_PAGE_TABLET = 9;
+const ITEMS_PER_PAGE_MOBILE = 3;
 
 /**
  * Component that displays a paginated grid of organization contributors.
@@ -36,6 +38,7 @@ export const ContributorsGrid = () => {
   );
   const [displayLastYearContributions, setDisplayLastYearContributions] =
     useLocalStorage("lastYear", false);
+  const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_DESKTOP);
 
   // Fetch contributors from the API.
   useEffect(() => {
@@ -54,7 +57,7 @@ export const ContributorsGrid = () => {
   // Overwrite state with query parameters if they are present
   useEffect(() => {
     const showOrgMembers = searchParams.get("orgMembers");
-    const yearlyContribParam = searchParams.get("lastYearContrib");
+    const yearlyContribParam = searchParams.get("lastYear");
     const pageParam = searchParams.get("page");
 
     if (showOrgMembers !== null) {
@@ -90,6 +93,23 @@ export const ContributorsGrid = () => {
     router.replace(`?${params.toString()}`);
   }, [excludeOrgMembers, displayLastYearContributions, currentPage, router]);
 
+  // Adjust items per page based on screen size
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerPage(ITEMS_PER_PAGE_MOBILE);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(ITEMS_PER_PAGE_TABLET);
+      } else {
+        setItemsPerPage(ITEMS_PER_PAGE_DESKTOP);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
   /**
    * Changes the pagination page.
    * @param page - The page number.
@@ -114,7 +134,7 @@ export const ContributorsGrid = () => {
     );
 
   // Calculate pagination details.
-  const totalPages = Math.ceil(filteredContributors.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredContributors.length / itemsPerPage);
 
   // Adjust current page if it is out of range.
   useEffect(() => {
@@ -124,14 +144,14 @@ export const ContributorsGrid = () => {
   }, [totalPages, currentPage]);
 
   // Calculate contributors for the current page.
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const startIndex = (currentPage - 1) * itemsPerPage;
   const selectedContributors = filteredContributors.slice(
     startIndex,
-    startIndex + ITEMS_PER_PAGE
+    startIndex + itemsPerPage
   );
 
   // Calculate the number of placeholders needed.
-  const placeholdersCount = ITEMS_PER_PAGE - selectedContributors.length;
+  const placeholdersCount = itemsPerPage - selectedContributors.length;
 
   return (
     <div className="flex flex-col items-center">
@@ -143,7 +163,7 @@ export const ContributorsGrid = () => {
         setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
       {/* Contributor Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4 w-full items-start min-h-[500px] mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-3 gap-y-4 w-full items-start mt-4">
         {selectedContributors.map((contributor) => {
           const truncatedName = truncateString(contributor.login, 15);
           const isTruncated = truncatedName !== contributor.login;
@@ -151,11 +171,11 @@ export const ContributorsGrid = () => {
           return (
             <div
               key={contributor.login}
-              className="flex flex-col items-center w-32 h-32"
+              className="flex flex-col items-center w-full"
             >
               <HoverCard key={contributor.login} contributor={contributor}>
                 <Avatar
-                  className={`w-14 h-14 avatar-hover-animation ${
+                  className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
                     isOrgMember(contributor, ORG_NAME)
                       ? "border-2 border-livepeer"
                       : "border-2"
@@ -166,7 +186,7 @@ export const ContributorsGrid = () => {
                     alt={contributor.login}
                   />
                   <AvatarFallback className="w-full h-full">
-                    {contributor.login[0]}
+                    {contributor.login.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </HoverCard>
@@ -209,7 +229,7 @@ export const ContributorsGrid = () => {
         {Array.from({ length: placeholdersCount }).map((_, index) => (
           <div
             key={`placeholder-${index}`}
-            className="flex flex-col items-center w-32 h-32"
+            className="flex flex-col items-center w-full"
           />
         ))}
       </div>

@@ -20,7 +20,9 @@ import { capitalize } from "@/lib/utils";
 export const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
+
+  const isDarkMode = resolvedTheme === "dark";
 
   useEffect(() => {
     setMounted(true);
@@ -40,7 +42,7 @@ export const Header = () => {
 
     if (imageError) return null;
 
-    const logoSrc = theme === "dark" ? ORG_LOGO_LIGHT : ORG_LOGO_DARK;
+    const logoSrc = isDarkMode ? ORG_LOGO_LIGHT : ORG_LOGO_DARK;
     const logo = (
       <Image
         src={logoSrc}
