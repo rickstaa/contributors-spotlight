@@ -4,6 +4,7 @@
 "use client";
 import { ORG_NAME } from "@/app/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -39,16 +40,19 @@ export const ContributorsGrid = () => {
   const [displayLastYearContributions, setDisplayLastYearContributions] =
     useLocalStorage("lastYear", false);
   const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_DESKTOP);
+  const [loading, setLoading] = useState(true);
 
   // Fetch contributors from the API.
   useEffect(() => {
     const fetchContributors = async () => {
+      setLoading(true);
       const res = await fetch("/api/contributors");
       if (!res.ok) {
         throw new Error("Failed to fetch contributors");
       }
       const data = await res.json();
       setContributors(data || []);
+      setLoading(false);
     };
 
     fetchContributors();
@@ -163,75 +167,81 @@ export const ContributorsGrid = () => {
         setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
       {/* Contributor Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-3 gap-y-4 w-full items-start mt-4">
-        {selectedContributors.map((contributor) => {
-          const truncatedName = truncateString(contributor.login, 15);
-          const isTruncated = truncatedName !== contributor.login;
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-center mt-6 px-4">
+        {loading
+          ? Array.from({ length: itemsPerPage }).map((_, index) => (
+              <div
+                key={`skeleton-${index}`}
+                className="flex flex-col items-center w-full min-w-[125px]"
+              >
+                <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20" />
+                <Skeleton className="mt-3 w-24 h-4" />
+                <Skeleton className="mt-2 w-32 h-4" />
+              </div>
+            ))
+          : selectedContributors.map((contributor) => {
+              const truncatedName = truncateString(contributor.login, 15);
+              const isTruncated = truncatedName !== contributor.login;
 
-          return (
-            <div
-              key={contributor.login}
-              className="flex flex-col items-center w-full"
-            >
-              <HoverCard key={contributor.login} contributor={contributor}>
-                <Avatar
-                  className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
-                    isOrgMember(contributor, ORG_NAME)
-                      ? "border-2 border-livepeer"
-                      : "border-2"
-                  }`}
+              return (
+                <div
+                  key={contributor.login}
+                  className="flex flex-col items-center w-full min-w-[125px]"
                 >
-                  <AvatarImage
-                    src={contributor.avatar_url}
-                    alt={contributor.login}
-                  />
-                  <AvatarFallback className="w-full h-full">
-                    {contributor.login.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </HoverCard>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={`https://github.com/${contributor.login}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  <HoverCard key={contributor.login} contributor={contributor}>
+                    <Avatar
+                      className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
+                        isOrgMember(contributor, ORG_NAME)
+                          ? "border-2 border-livepeer"
+                          : "border-2"
+                      }`}
                     >
-                      <p
-                        className={`mt-2 text-center ${
-                          isOrgMember(contributor, ORG_NAME)
-                            ? "text-livepeer"
-                            : ""
-                        }`}
-                      >
-                        {truncatedName}
-                      </p>
-                    </a>
-                  </TooltipTrigger>
-                  {isTruncated && (
-                    <TooltipContent>{contributor.login}</TooltipContent>
-                  )}
-                </Tooltip>
-              </TooltipProvider>
-              <p className="text-sm text-gray-500">
-                Contributions:{" "}
-                {formatCompactNumber(
-                  displayLastYearContributions
-                    ? contributor.yearly_contributions
-                    : contributor.contributions
-                )}
-              </p>
-            </div>
-          );
-        })}
+                      <AvatarImage
+                        src={contributor.avatar_url}
+                        alt={contributor.login}
+                      />
+                      <AvatarFallback className="w-full h-full">
+                        {contributor.login.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </HoverCard>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p
+                          className={`mt-2 text-center ${
+                            isOrgMember(contributor, ORG_NAME)
+                              ? "text-livepeer"
+                              : ""
+                          }`}
+                        >
+                          {truncatedName}
+                        </p>
+                      </TooltipTrigger>
+                      {isTruncated && (
+                        <TooltipContent>{contributor.login}</TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                  <p className="text-sm text-gray-500">
+                    Contributions:{" "}
+                    {formatCompactNumber(
+                      displayLastYearContributions
+                        ? contributor.yearly_contributions
+                        : contributor.contributions
+                    )}
+                  </p>
+                </div>
+              );
+            })}
         {/* Add placeholders to fill the empty spaces */}
-        {Array.from({ length: placeholdersCount }).map((_, index) => (
-          <div
-            key={`placeholder-${index}`}
-            className="flex flex-col items-center w-full"
-          />
-        ))}
+        {!loading &&
+          Array.from({ length: placeholdersCount }).map((_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="flex flex-col items-center w-full min-w-[125px]"
+            />
+          ))}
       </div>
       {/* Pagination widget */}
       <div className="mt-4 flex justify-center w-full">

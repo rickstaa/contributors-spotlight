@@ -18,7 +18,7 @@ const Home = () => {
     <>
       <GithubCorner href="https://github.com/rickstaa/contributors-spotlight" />
       <Header />
-      <div className="flex justify-center my-4">
+      <div className="flex justify-center mt-4">
         <ErrorBoundary
           fallback={<ErrorDisplay message="Failed to load contributors" />}
         >

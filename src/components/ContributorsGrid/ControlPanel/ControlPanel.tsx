@@ -49,7 +49,7 @@ export const ControlPanel = ({
   // Show skeleton while mounted is false.
   if (!mounted) {
     return (
-      <div className="flex items-center mb-4 space-x-4">
+      <div className="flex items-center space-x-4">
         <Skeleton className="w-[119px] h-[22px]" />
         <Skeleton className="w-[95px] h-[22px]" />
         <Skeleton className="w-8 h-[22px]" />
@@ -58,7 +58,7 @@ export const ControlPanel = ({
   }
 
   return (
-    <div className="flex items-center mb-4 space-x-4">
+    <div className="flex items-center space-x-4">
       {/* Org Members Hide/Show */}
       <TooltipProvider delayDuration={500}>
         <Tooltip>
