@@ -17,7 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
-import { HoverCard } from "./HoverCard";
+import { ContributorCard } from "./ContributorCard";
 import { Pagination } from "./Pagination";
 
 const ITEMS_PER_PAGE_DESKTOP = 20;
@@ -188,7 +188,10 @@ export const ContributorsGrid = () => {
                   key={contributor.login}
                   className="flex flex-col items-center w-full min-w-[125px]"
                 >
-                  <HoverCard key={contributor.login} contributor={contributor}>
+                  <ContributorCard
+                    key={contributor.login}
+                    contributor={contributor}
+                  >
                     <Avatar
                       className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
                         isOrgMember(contributor, ORG_NAME)
@@ -204,7 +207,7 @@ export const ContributorsGrid = () => {
                         {contributor.login.slice(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                  </HoverCard>
+                  </ContributorCard>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
