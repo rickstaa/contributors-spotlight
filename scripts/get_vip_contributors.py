@@ -1,16 +1,16 @@
-"""Fetches orchestrators with a GitHub account from the Livepeer Explorer API and stores
-them in a JSON file so we can showcase them in the contributors spotlight.
+"""Retrieves orchestrators with a GitHub account from the Livepeer Explorer API and
+stores them in a JSON file so we can showcase them in the contributors spotlight.
 """
 
 import requests
 import json
 import os
-from typing import Dict
+from typing import List, Dict, Any
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def save_to_json(data: Dict[str, any], filename: str):
+def save_to_json(data: List[Dict[str, Any]], filename: str):
     """Saves data to a JSON file.
 
     Args:
@@ -28,17 +28,19 @@ if __name__ == "__main__":
     response = requests.get("https://explorer.livepeer.org/api/ens-data")
     data = response.json()
 
-    # Filter the data to get orchestrators with a GitHub account and use GitHub as the key.
-    filtered_data = {
-        item["github"]: {
-            "name": item["name"],
-            "url": f"https://explorer.livepeer.org/accounts/{item['id']}/orchestrating",
+    # Only keep orchestrators with a GitHub account.
+    filtered_data = [
+        {
+            "github": item["github"],
+            "profile_url": (
+                f"https://explorer.livepeer.org/accounts/{item['id']}/orchestrating"
+            ),
         }
         for item in data
         if item.get("github") and item["github"].strip() != ""
-    }
+    ]
 
     # Save the filtered data to a JSON file.
-    file_path = os.path.join(FILE_DIR, "assets/vip_info.json")
+    file_path = os.path.join(FILE_DIR, "assets/vip_contributors_info.json")
     save_to_json(filtered_data, file_path)
     print(f"Stored orchestrators with GitHub accounts in {file_path}")

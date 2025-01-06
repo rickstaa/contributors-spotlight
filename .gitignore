@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 scripts/assets/contributors_info.json
+scripts/assets/vip_contributors_info.json
 
 # debug
 npm-debug.log*

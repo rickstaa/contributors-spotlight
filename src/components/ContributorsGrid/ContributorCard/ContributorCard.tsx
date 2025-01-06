@@ -2,6 +2,7 @@
  * @file Contains contributor card component for displaying GitHub contributor info.
  * Uses a hover card for desktop and a popover for mobile devices.
  */
+"use client";
 import { useEffect, useState } from "react";
 import {
   HoverCard as UIHoverCard,
@@ -24,6 +25,8 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { VIP_LABEL } from "@/app/config";
+import { VipIcon } from "./VipIcon";
 
 /**
  * Represents the properties of the contributor card component.
@@ -63,6 +66,7 @@ export const ContributorCard = ({
   const { name, login, bio, company, location, twitter_username, blog_url } =
     contributor;
   const isEmployee = isOrgMember(contributor, ORG_NAME);
+  const VipLabel = <p className="text-yellow-600">{capitalize(VIP_LABEL)}</p>;
 
   const content = (
     <div className="p-1">
@@ -72,6 +76,22 @@ export const ContributorCard = ({
           <p className="text-sm text-gray-500 break-words line-clamp-5">
             {bio}
           </p>
+        </div>
+      )}
+      {contributor.is_vip && (
+        <div className="flex items-center mt-2">
+          <VipIcon className="w-4 h-4 mr-2 text-yellow-600" />
+          {contributor.vip_info?.profile_url ? (
+            <a
+              href={contributor.vip_info.profile_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {VipLabel}
+            </a>
+          ) : (
+            VipLabel
+          )}
         </div>
       )}
       <div className="flex items-center mt-2">

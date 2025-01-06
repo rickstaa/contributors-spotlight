@@ -3,6 +3,14 @@
  */
 
 /**
+ * Represents a URL to a profile.
+ */
+interface ProfileUrl {
+  /** Profile URL. */
+  profile_url: string;
+}
+
+/**
  * Represents information about a GitHub contributor to the organization.
  */
 export interface Contributor {
@@ -28,4 +36,16 @@ export interface Contributor {
   contributions: number;
   /** The number of contributions made by the contributor in the last year. */
   yearly_contributions: number;
+  /** Indicates whether the contributor is a VIP. */
+  is_vip: boolean;
+  /** Additional information about the VIP. */
+  vip_info?: ProfileUrl;
+}
+
+/**
+ * Represents information about a VIP contributor to the organization.
+ */
+export interface VipContributor extends ProfileUrl {
+  /** The GitHub username of the contributor. */
+  github: string;
 }

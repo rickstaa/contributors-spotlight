@@ -41,13 +41,13 @@ export function ensureHttps(url: string): string {
 }
 
 /**
- * Capitalizes the first letter of the string and makes the rest lowercase.
+ * Capitalizes first letter of a string while keeping the rest of the string intact.
  * @param str - The string to capitalize.
- * @returns The capitalized string.
+ * @returns The string with the first letter capitalized.
  */
 export function capitalize(str: string): string {
   if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**

@@ -1,0 +1,1 @@
+export { VipIcon } from "./VipIcon";

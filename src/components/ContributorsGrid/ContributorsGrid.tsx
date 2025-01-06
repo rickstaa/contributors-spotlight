@@ -2,6 +2,7 @@
  * @file Contains the contributors info grid component.
  */
 "use client";
+import { useEffect, useState } from "react";
 import { ORG_NAME } from "@/app/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,13 +14,12 @@ import {
 } from "@/components/ui/tooltip";
 import { Footer } from "@/components/ContributorsGrid/Footer";
 import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
-import { Contributor } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
 import { ContributorCard } from "./ContributorCard";
 import { Pagination } from "./Pagination";
+import { Contributor, VipContributor } from "@/types";
 
 // The number of contributors to show per page based on screen size.
 const ITEMS_PER_PAGE = {
@@ -30,7 +30,10 @@ const ITEMS_PER_PAGE = {
   xl: 20, // Extra large screens (desktop)
 };
 
-// Function to get items per page based on screen size.
+/**
+ * Get the number of contributors to show per page based on the screen size.
+ * @returns The number of contributors to show per page.
+ */
 const getItemsPerPage = () => {
   const width = window.innerWidth;
   if (width >= 1280) {
@@ -44,6 +47,46 @@ const getItemsPerPage = () => {
   } else {
     return ITEMS_PER_PAGE.default;
   }
+};
+
+/**
+ * Fetches the contributors data from the APIs.
+ * @returns The contributors data.
+ */
+const fetchContributorsData = async (): Promise<Contributor[]> => {
+  const [contributorsRes, vipContributorsRes] = await Promise.all([
+    fetch("/api/contributors"),
+    fetch("/api/contributors/vips"),
+  ]);
+
+  if (!contributorsRes.ok) {
+    throw new Error("Failed to fetch contributors");
+  }
+  if (!vipContributorsRes.ok) {
+    throw new Error("Failed to fetch VIP contributors");
+  }
+
+  const contributorsData: Contributor[] = await contributorsRes.json();
+  const vipContributorsData: VipContributor[] = await vipContributorsRes.json();
+
+  // Append VIP status and info to contributors
+  return contributorsData.map((contributor) => {
+    const vipContributor = vipContributorsData.find(
+      (vip) => vip.github === contributor.login
+    );
+
+    if (vipContributor) {
+      return {
+        ...contributor,
+        is_vip: true,
+        vip_info: {
+          profile_url: vipContributor.profile_url,
+        },
+      };
+    }
+
+    return contributor;
+  });
 };
 
 /**
@@ -64,17 +107,17 @@ export const ContributorsGrid = () => {
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
   const [loading, setLoading] = useState(true);
 
-  // Fetch contributors from the API.
+  // Fetch contributors info from the API endpoints.
   useEffect(() => {
     const fetchContributors = async () => {
-      setLoading(true);
-      const res = await fetch("/api/contributors");
-      if (!res.ok) {
-        throw new Error("Failed to fetch contributors");
+      try {
+        const extendedContributorsData = await fetchContributorsData();
+        setContributors(extendedContributorsData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-      const data = await res.json();
-      setContributors(data || []);
-      setLoading(false);
     };
 
     fetchContributors();
