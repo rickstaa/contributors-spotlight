@@ -32,6 +32,10 @@ jobs:
         run: |
           python -u scripts/get_org_contributors_info.py
 
+      - name: Run script to get VIP contributors
+        run: |
+          python -u scripts/fetch_vip_contributors.py
+
       - name: Upload artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
