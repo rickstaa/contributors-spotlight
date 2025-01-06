@@ -69,7 +69,9 @@ export const ContributorCard = ({
       <p className="font-bold">{capitalize(name || login)}</p>
       {bio && (
         <div className="flex items-center mt-2">
-          <p className="text-sm text-gray-500 break-words">{bio}</p>
+          <p className="text-sm text-gray-500 break-words line-clamp-5">
+            {bio}
+          </p>
         </div>
       )}
       <div className="flex items-center mt-2">
@@ -113,7 +115,9 @@ export const ContributorCard = ({
       {location && (
         <div className="flex items-center mt-2">
           <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-          <p className="text-sm text-gray-500">{location}</p>
+          <p className="text-sm text-gray-500 break-words line-clamp-2">
+            {location}
+          </p>
         </div>
       )}
       {(company || isEmployee) && (
@@ -124,7 +128,7 @@ export const ContributorCard = ({
             }`}
           />
           <p
-            className={`text-sm ${
+            className={`text-sm break-words line-clamp-2 ${
               isEmployee ? "text-livepeer" : "text-gray-500"
             }`}
           >

@@ -180,7 +180,7 @@ export const ContributorsGrid = () => {
               </div>
             ))
           : selectedContributors.map((contributor) => {
-              const truncatedName = truncateString(contributor.login, 15);
+              const truncatedName = truncateString(contributor.login, 14);
               const isTruncated = truncatedName !== contributor.login;
 
               return (
