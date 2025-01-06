@@ -12,7 +12,7 @@ const twConfig = resolveConfig(tailwindConfig);
  */
 export const LoadingSpinner = () => {
   return (
-    <div className="flex justify-center items-center min-h-[500px]">
+    <div className="fixed inset-0 flex items-center justify-center">
       <ClipLoader
         color={twConfig.theme.colors.livepeer}
         size={50}

@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Footer } from "@/components/ContributorsGrid/Footer";
 import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
 import { Contributor } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -169,9 +170,6 @@ export const ContributorsGrid = () => {
     startIndex + itemsPerPage
   );
 
-  // Calculate the number of placeholders needed.
-  const placeholdersCount = itemsPerPage - selectedContributors.length;
-
   return (
     <div className="flex flex-col items-center">
       {/* Control Panel */}
@@ -182,7 +180,7 @@ export const ContributorsGrid = () => {
         setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
       {/* Contributor Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-center my-6 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-start justify-items-start my-6 px-4">
         {loading
           ? Array.from({ length: itemsPerPage }).map((_, index) => (
               <div
@@ -191,7 +189,7 @@ export const ContributorsGrid = () => {
               >
                 <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20" />
                 <Skeleton className="mt-3 w-24 h-4" />
-                <Skeleton className="mt-2 w-32 h-4" />
+                <Skeleton className="mt-2 w-28 h-4" />
               </div>
             ))
           : selectedContributors.map((contributor) => {
@@ -259,13 +257,6 @@ export const ContributorsGrid = () => {
               );
             })}
         {/* Add placeholders to fill the empty spaces */}
-        {!loading &&
-          Array.from({ length: placeholdersCount }).map((_, index) => (
-            <div
-              key={`placeholder-${index}`}
-              className="flex flex-col items-center w-full min-w-[125px]"
-            />
-          ))}
       </div>
       {/* Pagination widget */}
       <div className="flex justify-center w-full">
@@ -275,6 +266,8 @@ export const ContributorsGrid = () => {
           onPageChange={handlePageChange}
         />
       </div>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

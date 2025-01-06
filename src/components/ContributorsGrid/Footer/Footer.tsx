@@ -1,9 +1,9 @@
 /**
- * @file Contains the application footer component.
+ * @file Contains the contributors grid footer component.
  */
 
 /**
- * App footer with call to action.
+ * Contributors grid footer component.
  */
 export const Footer = () => {
   return (

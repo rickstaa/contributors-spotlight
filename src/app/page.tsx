@@ -3,12 +3,11 @@
  */
 import { ContributorsGrid } from "@/components/ContributorsGrid/ContributorsGrid";
 import { ErrorDisplay } from "@/components/ErrorDisplay/ErrorDisplay";
-import { LoadingSpinner } from "@/components/LoadingSpinner/LoadingSpinner";
 import { Header } from "@/components/Header";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Footer } from "@/components/Footer";
 import { GithubCorner } from "@/components/GithubCorner";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 /**
  * Home page component.
@@ -27,7 +26,6 @@ const Home = () => {
           </Suspense>
         </ErrorBoundary>
       </div>
-      <Footer />
     </>
   );
 };
