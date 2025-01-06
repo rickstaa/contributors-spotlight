@@ -7,10 +7,10 @@
  */
 export const Footer = () => {
   return (
-    <footer className="py-6 md:px-8 md:py-0">
-      <div className="container mx-auto text-center py-4">
+    <footer className="md:px-8 md:py-4">
+      <div className="container mx-auto text-center">
         <p className="text-sm leading-loose text-muted-foreground">
-          Want to join our top contributors? Visit our{" "}
+          Excited to contribute? Visit our{" "}
           <a
             href="https://www.livepeer.org/dev-hub"
             target="_blank"
@@ -18,8 +18,8 @@ export const Footer = () => {
             className="text-livepeer"
           >
             Dev Hub
-          </a>
-          !
+          </a>{" "}
+          to get started!
         </p>
       </div>
     </footer>

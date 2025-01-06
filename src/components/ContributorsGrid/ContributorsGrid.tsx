@@ -167,7 +167,7 @@ export const ContributorsGrid = () => {
         setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
       {/* Contributor Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-center mt-6 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-center my-6 px-4">
         {loading
           ? Array.from({ length: itemsPerPage }).map((_, index) => (
               <div
@@ -244,7 +244,7 @@ export const ContributorsGrid = () => {
           ))}
       </div>
       {/* Pagination widget */}
-      <div className="mt-4 flex justify-center w-full">
+      <div className="flex justify-center w-full">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

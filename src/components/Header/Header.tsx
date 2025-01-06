@@ -77,7 +77,7 @@ export const Header = () => {
           Contributors Spotlight
         </h1>
       </div>
-      <h5 className="text-center mt-4 text-sm sm:text-base md:text-lg text-gray-500">
+      <h5 className="text-center my-4 text-sm sm:text-base md:text-lg text-gray-500">
         Celebrating the invaluable contributions of our open-source community!
       </h5>
     </div>
