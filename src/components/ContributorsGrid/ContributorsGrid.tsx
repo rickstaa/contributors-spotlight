@@ -20,9 +20,30 @@ import { ControlPanel } from "./ControlPanel";
 import { ContributorCard } from "./ContributorCard";
 import { Pagination } from "./Pagination";
 
-const ITEMS_PER_PAGE_DESKTOP = 20;
-const ITEMS_PER_PAGE_TABLET = 9;
-const ITEMS_PER_PAGE_MOBILE = 3;
+// The number of contributors to show per page based on screen size.
+const ITEMS_PER_PAGE = {
+  default: 3, // Default for mobile
+  sm: 6, // Small screens
+  md: 9, // Medium screens (tablet)
+  lg: 12, // Large screens
+  xl: 20, // Extra large screens (desktop)
+};
+
+// Function to get items per page based on screen size.
+const getItemsPerPage = () => {
+  const width = window.innerWidth;
+  if (width >= 1280) {
+    return ITEMS_PER_PAGE.xl;
+  } else if (width >= 1024) {
+    return ITEMS_PER_PAGE.lg;
+  } else if (width >= 768) {
+    return ITEMS_PER_PAGE.md;
+  } else if (width >= 640) {
+    return ITEMS_PER_PAGE.sm;
+  } else {
+    return ITEMS_PER_PAGE.default;
+  }
+};
 
 /**
  * Component that displays a paginated grid of organization contributors.
@@ -39,7 +60,7 @@ export const ContributorsGrid = () => {
   );
   const [displayLastYearContributions, setDisplayLastYearContributions] =
     useLocalStorage("lastYear", false);
-  const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_DESKTOP);
+  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
   const [loading, setLoading] = useState(true);
 
   // Fetch contributors from the API.
@@ -100,13 +121,7 @@ export const ContributorsGrid = () => {
   // Adjust items per page based on screen size
   useEffect(() => {
     const updateItemsPerPage = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerPage(ITEMS_PER_PAGE_MOBILE);
-      } else if (window.innerWidth < 1024) {
-        setItemsPerPage(ITEMS_PER_PAGE_TABLET);
-      } else {
-        setItemsPerPage(ITEMS_PER_PAGE_DESKTOP);
-      }
+      setItemsPerPage(getItemsPerPage());
     };
 
     updateItemsPerPage();
@@ -211,15 +226,21 @@ export const ContributorsGrid = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <p
-                          className={`mt-2 text-center ${
-                            isOrgMember(contributor, ORG_NAME)
-                              ? "text-livepeer"
-                              : ""
-                          }`}
+                        <a
+                          href={`https://github.com/${contributor.login}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          {truncatedName}
-                        </p>
+                          <p
+                            className={`mt-2 text-center ${
+                              isOrgMember(contributor, ORG_NAME)
+                                ? "text-livepeer"
+                                : ""
+                            }`}
+                          >
+                            {truncatedName}
+                          </p>
+                        </a>
                       </TooltipTrigger>
                       {isTruncated && (
                         <TooltipContent>{contributor.login}</TooltipContent>

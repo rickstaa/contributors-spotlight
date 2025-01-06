@@ -7,7 +7,7 @@
  */
 export const Footer = () => {
   return (
-    <footer className="md:px-8 md:py-4">
+    <footer className="px-8 py-4">
       <div className="container mx-auto text-center">
         <p className="text-sm leading-loose text-muted-foreground">
           Excited to contribute? Visit our{" "}
