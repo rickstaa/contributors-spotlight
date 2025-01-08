@@ -252,6 +252,8 @@ export const ContributorsGrid = () => {
                       className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
                         isOrgMember(contributor, ORG_NAME)
                           ? "border-2 border-livepeer"
+                          : contributor.is_vip
+                          ? "border-2 border-yellow-600"
                           : "border-2"
                       }`}
                     >
@@ -288,14 +290,20 @@ export const ContributorsGrid = () => {
                       )}
                     </Tooltip>
                   </TooltipProvider>
-                  <p className="text-sm text-gray-500">
-                    Contributions:{" "}
-                    {formatCompactNumber(
-                      displayLastYearContributions
-                        ? contributor.yearly_contributions
-                        : contributor.contributions
-                    )}
-                  </p>
+                  <a
+                    href={`https://github.com/search?q=org%3Alivepeer+author%3A${contributor.login}&type=commits`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <p className="text-sm text-gray-500">
+                      Contributions:{" "}
+                      {formatCompactNumber(
+                        displayLastYearContributions
+                          ? contributor.yearly_contributions
+                          : contributor.contributions
+                      )}
+                    </p>
+                  </a>
                 </div>
               );
             })}
