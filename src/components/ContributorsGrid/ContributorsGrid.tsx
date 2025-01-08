@@ -230,7 +230,7 @@ export const ContributorsGrid = () => {
                 key={`skeleton-${index}`}
                 className="flex flex-col items-center w-full min-w-[125px]"
               >
-                <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20" />
+                <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 rounded-full" />
                 <Skeleton className="mt-3 w-24 h-4" />
                 <Skeleton className="mt-2 w-28 h-4" />
               </div>
