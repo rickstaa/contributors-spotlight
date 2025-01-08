@@ -152,7 +152,9 @@ export const ContributorCard = ({
               isEmployee ? "text-livepeer" : "text-gray-500"
             }`}
           >
-            {isEmployee ? ORG_NAME : capitalize(cleanCompanyName(company))}
+            {isEmployee
+              ? capitalize(ORG_NAME)
+              : capitalize(cleanCompanyName(company))}
           </p>
         </div>
       )}
