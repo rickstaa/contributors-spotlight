@@ -35,18 +35,15 @@ const ITEMS_PER_PAGE = {
  * @returns The number of contributors to show per page.
  */
 const getItemsPerPage = () => {
+  if (typeof window === "undefined") return 0;
+
   const width = window.innerWidth;
-  if (width >= 1280) {
-    return ITEMS_PER_PAGE.xl;
-  } else if (width >= 1024) {
-    return ITEMS_PER_PAGE.lg;
-  } else if (width >= 768) {
-    return ITEMS_PER_PAGE.md;
-  } else if (width >= 640) {
-    return ITEMS_PER_PAGE.sm;
-  } else {
-    return ITEMS_PER_PAGE.default;
-  }
+  if (width >= 1280) return ITEMS_PER_PAGE.xl;
+  if (width >= 1024) return ITEMS_PER_PAGE.lg;
+  if (width >= 768) return ITEMS_PER_PAGE.md;
+  if (width >= 640) return ITEMS_PER_PAGE.sm;
+
+  return ITEMS_PER_PAGE.default;
 };
 
 /**
