@@ -249,12 +249,14 @@ export const ContributorsGrid = () => {
                     contributor={contributor}
                   >
                     <Avatar
-                      className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 ${
-                        isOrgMember(contributor, ORG_NAME)
-                          ? "border-2 border-livepeer"
+                      className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 border-2 ${
+                        isOrgMember(contributor, ORG_NAME) && contributor.is_vip
+                          ? "border-t-livepeer border-b-yellow-600 border-l-livepeer border-r-yellow-600"
+                          : isOrgMember(contributor, ORG_NAME)
+                          ? "border-livepeer"
                           : contributor.is_vip
-                          ? "border-2 border-yellow-600"
-                          : "border-2"
+                          ? "border-yellow-600"
+                          : ""
                       }`}
                     >
                       <AvatarImage
