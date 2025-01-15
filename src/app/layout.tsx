@@ -29,7 +29,7 @@ const geistMono = Geist_Mono({
  */
 export const metadata: Metadata = {
   title: `${capitalize(ORG_NAME)} Contributors Spotlight`,
-  description: `Web app showcasing the open-source contributors behind ${capitalize(
+  description: `Showcasing the open-source contributors behind ${capitalize(
     ORG_NAME
   )} software`,
 };
