@@ -32,6 +32,17 @@ export const metadata: Metadata = {
   description: `Showcasing the open-source contributors behind ${capitalize(
     ORG_NAME
   )} software`,
+  keywords: [
+    "open-source",
+    "contributors",
+    "github",
+    "software",
+    "livepeer",
+    "spotlight",
+  ],
+  openGraph: {
+    images: "/app_banner.png",
+  },
 };
 
 /**
