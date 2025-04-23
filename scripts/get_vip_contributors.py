@@ -2,10 +2,12 @@
 stores them in a JSON file so we can showcase them in the contributors spotlight.
 """
 
-import requests
 import json
 import os
-from typing import List, Dict, Any
+import sys
+from typing import Any, Dict, List
+
+import requests
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,6 +29,10 @@ if __name__ == "__main__":
     # Fetch orchestrator profile data.
     response = requests.get("https://explorer.livepeer.org/api/ens-data")
     data = response.json()
+
+    if not isinstance(data, list):
+        print("Invalid response from the ens-data API. Exiting...")
+        sys.exit(1)
 
     # Only keep orchestrators with a GitHub account.
     filtered_data = [
