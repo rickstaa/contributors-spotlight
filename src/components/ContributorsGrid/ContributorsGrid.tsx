@@ -118,39 +118,31 @@ export const ContributorsGrid = () => {
     useLocalStorage("lastYear", false);
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
   const [loading, setLoading] = useState(true);
-  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isRandomMode, setIsRandomMode] = useState(false);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(false);
   const [randomSeed, setRandomSeed] = useState(() => Math.floor(Math.random() * 1000));
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Get scroll speed and seed from URL params
-  const { scrollSpeed, randomSpeed } = useMemo(() => {
+  // Get display parameters from URL
+  const { rows, random, scrollSpeed, randomSpeed } = useMemo(() => {
+    const rowsParam = searchParams.get('rows');
+    const randomParam = searchParams.get('random');
     const speedParam = searchParams.get('scrollSpeed');
-    const randomParam = searchParams.get('randomSpeed');
+    const randomSpeedParam = searchParams.get('randomSpeed');
+    
     return {
+      rows: rowsParam ? parseInt(rowsParam, 10) : null,
+      random: randomParam === 'true',
       scrollSpeed: SCROLL_SPEEDS[speedParam as keyof typeof SCROLL_SPEEDS] || SCROLL_SPEEDS.slow,
-      randomSpeed: RANDOM_INTERVALS[randomParam as keyof typeof RANDOM_INTERVALS] || RANDOM_INTERVALS.medium,
+      randomSpeed: RANDOM_INTERVALS[randomSpeedParam as keyof typeof RANDOM_INTERVALS] || RANDOM_INTERVALS.medium,
     };
   }, [searchParams]);
 
-  // Automatic randomization effect with smooth transition
+  // Set random mode based on URL param
   useEffect(() => {
-    if (!autoScrollEnabled) return;
-
-    const randomInterval = setInterval(() => {
-      setIsTransitioning(true);
-      // Wait for exit animation
-      setTimeout(() => {
-        setRandomSeed(Math.floor(Math.random() * 1000));
-        // Wait a frame before starting entry animation
-        requestAnimationFrame(() => {
-          setIsTransitioning(false);
-        });
-      }, 500); // Half of our transition duration
-    }, randomSpeed);
-
-    return () => clearInterval(randomInterval);
-  }, [autoScrollEnabled, randomSpeed]);
+    setIsRandomMode(random);
+    setAutoScrollEnabled(random);
+  }, [random]);
 
   // Fetch contributors info from the API endpoints.
   useEffect(() => {
@@ -194,29 +186,71 @@ export const ContributorsGrid = () => {
 
   // Update the URL query params when the state changes.
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams.toString());
     if (excludeOrgMembers) {
       params.set("orgMembers", "false");
+    } else {
+      params.delete("orgMembers");
     }
     if (displayLastYearContributions) {
       params.set("lastYear", "true");
+    } else {
+      params.delete("lastYear");
     }
     if (currentPage > 1) {
       params.set("page", currentPage.toString());
+    } else {
+      params.delete("page");
     }
     router.replace(`?${params.toString()}`);
-  }, [excludeOrgMembers, displayLastYearContributions, currentPage, router]);
+  }, [excludeOrgMembers, displayLastYearContributions, currentPage, router, searchParams]);
 
   // Adjust items per page based on screen size
   useEffect(() => {
     const updateItemsPerPage = () => {
-      setItemsPerPage(getItemsPerPage());
+      // If rows parameter is specified, calculate items per page based on that
+      if (rows) {
+        const cols = getColumnsCount();
+        setItemsPerPage(rows * cols);
+      } else {
+        setItemsPerPage(getItemsPerPage());
+      }
     };
 
     updateItemsPerPage();
     window.addEventListener("resize", updateItemsPerPage);
     return () => window.removeEventListener("resize", updateItemsPerPage);
-  }, []);
+  }, [rows]);
+
+  // Get number of columns based on screen size
+  const getColumnsCount = () => {
+    if (typeof window === "undefined") return 4;
+    const width = window.innerWidth;
+    if (width >= 1280) return 5; // xl
+    if (width >= 1024) return 4; // lg
+    if (width >= 768) return 3;  // md
+    if (width >= 640) return 2;  // sm
+    return 1;                    // default
+  };
+
+  // Automatic randomization effect with smooth transition for random mode
+  useEffect(() => {
+    if (!isRandomMode || !autoScrollEnabled) return;
+
+    const randomInterval = setInterval(() => {
+      setIsTransitioning(true);
+      // Wait for exit animation
+      setTimeout(() => {
+        setRandomSeed(Math.floor(Math.random() * 1000));
+        // Wait a frame before starting entry animation
+        requestAnimationFrame(() => {
+          setIsTransitioning(false);
+        });
+      }, 500); // Half of our transition duration
+    }, randomSpeed);
+
+    return () => clearInterval(randomInterval);
+  }, [isRandomMode, autoScrollEnabled, randomSpeed]);
 
   // Calculate filtered and sorted contributors based on the state.
   const filteredContributors = contributors
@@ -243,17 +277,7 @@ export const ContributorsGrid = () => {
     }
   }, [totalPages, currentPage]);
 
-  // Calculate items per page based on screen size
-  const itemsPerRow = useMemo(() => {
-    if (typeof window === "undefined") return 4;
-    const width = window.innerWidth;
-    if (width >= 1024) return 4; // Desktop: 4 items
-    if (width >= 768) return 3;  // Tablet: 3 items
-    if (width >= 640) return 2;  // Small tablet: 2 items
-    return 1;                    // Mobile: 1 item
-  }, []);
-
-  // Define seededShuffle function
+  // Define seededShuffle function for random mode
   const seededShuffle = (array: any[], seed: number) => {
     const shuffled = [...array];
     let currentSeed = seed;
@@ -273,66 +297,36 @@ export const ContributorsGrid = () => {
     return shuffled;
   };
 
-  // Create a duplicated array for infinite scroll with better randomization
-  const infiniteContributors = useMemo(() => {
-    const filtered = filteredContributors
-      .filter(
-        (contributor) => !excludeOrgMembers || !isOrgMember(contributor, ORG_NAME)
-      )
-      .filter(
-        (contributor) =>
-          !displayLastYearContributions || contributor.yearly_contributions > 0
-      )
-      .sort((a, b) =>
-        displayLastYearContributions
-          ? b.yearly_contributions - a.yearly_contributions
-          : b.contributions - a.contributions
-      );
-
-    // Create three differently shuffled copies for variety
-    const firstShuffle = seededShuffle(filtered, randomSeed);
-    const secondShuffle = seededShuffle(filtered, randomSeed + 1);
-    const thirdShuffle = seededShuffle(filtered, randomSeed + 2);
-
-    return [...firstShuffle, ...secondShuffle, ...thirdShuffle];
-  }, [filteredContributors, excludeOrgMembers, displayLastYearContributions, randomSeed]);
+  // Get contributors to display based on mode
+  const displayContributors = useMemo(() => {
+    if (isRandomMode) {
+      // In random mode, show exactly the number of columns for the current screen size
+      return seededShuffle(filteredContributors, randomSeed).slice(0, getColumnsCount());
+    } else {
+      // In normal mode, use pagination
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      return filteredContributors.slice(startIndex, startIndex + itemsPerPage);
+    }
+  }, [filteredContributors, isRandomMode, randomSeed, currentPage, itemsPerPage]);
 
   // Handle page changes for pagination
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-    setAutoScrollEnabled(false);
-    setScrollPosition((page - 1) * 4);
-    // Generate new random seed for the page
-    setRandomSeed(Math.floor(Math.random() * 1000));
-  }, []);
+    if (isRandomMode) {
+      setAutoScrollEnabled(false);
+    }
+  }, [isRandomMode]);
 
-  // Update URL params
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    if (excludeOrgMembers) {
-      params.set("orgMembers", "false");
+  // Determine grid columns based on screen size or rows parameter
+  const gridColumnsClass = useMemo(() => {
+    if (isRandomMode) {
+      // In random mode, always use a single row with columns based on screen size
+      return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
     } else {
-      params.delete("orgMembers");
+      // In normal mode, use responsive grid
+      return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
     }
-    if (displayLastYearContributions) {
-      params.set("lastYear", "true");
-    } else {
-      params.delete("lastYear");
-    }
-    if (currentPage > 1) {
-      params.set("page", currentPage.toString());
-    }
-    if (searchParams.get('scrollSpeed')) {
-      params.set('scrollSpeed', searchParams.get('scrollSpeed')!);
-    }
-    if (searchParams.get('randomSpeed')) {
-      params.set('randomSpeed', searchParams.get('randomSpeed')!);
-    }
-    if (!autoScrollEnabled) {
-      params.set('seed', randomSeed.toString());
-    }
-    router.replace(`?${params.toString()}`);
-  }, [excludeOrgMembers, displayLastYearContributions, currentPage, randomSeed, autoScrollEnabled]);
+  }, [isRandomMode]);
 
   return (
     <div className="flex flex-col items-center">
@@ -343,56 +337,45 @@ export const ContributorsGrid = () => {
         setDisplayLastYearContributions={setDisplayLastYearContributions}
       />
 
-      {/* Contributors Grid with Navigation */}
-      <div className="relative w-full my-6 px-16 overflow-hidden">
-        {/* Left Navigation */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background/90"
-          onClick={() => {
-            setIsTransitioning(true);
-            setTimeout(() => {
-              const newPage = currentPage > 1 ? currentPage - 1 : Math.ceil(infiniteContributors.length / 12);
-              handlePageChange(newPage);
-              setIsTransitioning(false);
-            }, 500);
-          }}
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </Button>
+      {isRandomMode ? (
+        // Random Mode - Carousel View
+        <div className="relative w-full my-6 px-16 overflow-hidden">
+          {/* Left Navigation */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background/90"
+            onClick={() => {
+              setIsTransitioning(true);
+              setAutoScrollEnabled(false);
+              setTimeout(() => {
+                setRandomSeed(Math.floor(Math.random() * 1000));
+                setIsTransitioning(false);
+              }, 500);
+            }}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
 
-        {/* Contributors Grid */}
-        <div 
-          className={`
-            flex transition-all duration-1000 ease-in-out
-            ${isTransitioning ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}
-          `}
-          style={{
-            transform: `translateX(${-(scrollPosition % 1) * 25}%)`,
-          }}
-          onMouseEnter={() => setAutoScrollEnabled(false)}
-          onMouseLeave={() => {
-            setAutoScrollEnabled(true);
-            setIsTransitioning(true);
-            setTimeout(() => {
-              setRandomSeed(Math.floor(Math.random() * 1000));
-              setIsTransitioning(false);
-            }, 500);
-          }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
-            {loading
-              ? Array.from({ length: 4 }).map((_, index) => (
-                  <div key={`skeleton-${index}`} className="flex flex-col items-center">
-                    <Skeleton className="w-32 h-32 rounded-full" />
-                    <Skeleton className="mt-3 w-24 h-4" />
-                    <Skeleton className="mt-2 w-28 h-4" />
-                  </div>
-                ))
-              : infiniteContributors
-                  .slice(scrollPosition, scrollPosition + 4)
-                  .map((contributor) => {
+          {/* Contributors Grid - Changed to flex row for random mode */}
+          <div 
+            className={`
+              flex transition-all duration-1000 ease-in-out
+              ${isTransitioning ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}
+            `}
+            onMouseEnter={() => setAutoScrollEnabled(false)}
+            onMouseLeave={() => setAutoScrollEnabled(true)}
+          >
+            <div className="flex flex-row justify-between gap-6 w-full">
+              {loading
+                ? Array.from({ length: getColumnsCount() }).map((_, index) => (
+                    <div key={`skeleton-${index}`} className="flex flex-col items-center flex-1">
+                      <Skeleton className="w-32 h-32 rounded-full" />
+                      <Skeleton className="mt-3 w-24 h-4" />
+                      <Skeleton className="mt-2 w-28 h-4" />
+                    </div>
+                  ))
+                : displayContributors.map((contributor) => {
                     const truncatedName = truncateString(contributor.login, 14);
                     const isTruncated = truncatedName !== contributor.login;
 
@@ -400,7 +383,7 @@ export const ContributorsGrid = () => {
                       <div
                         key={contributor.login}
                         className={`
-                          flex flex-col items-center w-full min-w-[125px]
+                          flex flex-col items-center flex-1
                           transition-all duration-1000 ease-in-out
                           ${isTransitioning ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}
                         `}
@@ -470,35 +453,127 @@ export const ContributorsGrid = () => {
                       </div>
                     );
                   })}
+            </div>
           </div>
+
+          {/* Right Navigation */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background/90"
+            onClick={() => {
+              setIsTransitioning(true);
+              setAutoScrollEnabled(false);
+              setTimeout(() => {
+                setRandomSeed(Math.floor(Math.random() * 1000));
+                setIsTransitioning(false);
+              }, 500);
+            }}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
         </div>
+      ) : (
+        // Normal Mode - Grid View
+        <div className={`grid ${gridColumnsClass} gap-6 w-full items-start justify-items-start my-6 px-4`}>
+          {loading
+            ? Array.from({ length: itemsPerPage }).map((_, index) => (
+                <div
+                  key={`skeleton-${index}`}
+                  className="flex flex-col items-center w-full min-w-[125px]"
+                >
+                  <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 rounded-full" />
+                  <Skeleton className="mt-3 w-24 h-4" />
+                  <Skeleton className="mt-2 w-28 h-4" />
+                </div>
+              ))
+            : displayContributors.map((contributor) => {
+                const truncatedName = truncateString(contributor.login, 14);
+                const isTruncated = truncatedName !== contributor.login;
 
-        {/* Right Navigation */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background/90"
-          onClick={() => {
-            setIsTransitioning(true);
-            setTimeout(() => {
-              const newPage = currentPage < Math.ceil(infiniteContributors.length / 12) ? currentPage + 1 : 1;
-              handlePageChange(newPage);
-              setIsTransitioning(false);
-            }, 500);
-          }}
-        >
-          <ChevronRight className="h-6 w-6" />
-        </Button>
-      </div>
+                return (
+                  <div
+                    key={contributor.login}
+                    className="flex flex-col items-center w-full min-w-[125px]"
+                  >
+                    <ContributorCard
+                      key={contributor.login}
+                      contributor={contributor}
+                    >
+                      <Avatar
+                        className={`w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 border-2 ${
+                          isOrgMember(contributor, ORG_NAME) && contributor.is_vip
+                            ? "border-t-livepeer border-b-yellow-600 border-l-livepeer border-r-yellow-600"
+                            : isOrgMember(contributor, ORG_NAME)
+                            ? "border-livepeer"
+                            : contributor.is_vip
+                            ? "border-yellow-600"
+                            : ""
+                        }`}
+                      >
+                        <AvatarImage
+                          src={contributor.avatar_url}
+                          alt={contributor.login}
+                        />
+                        <AvatarFallback className="w-full h-full">
+                          {contributor.login.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </ContributorCard>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <a
+                            href={`https://github.com/${contributor.login}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <p
+                              className={`mt-2 text-center ${
+                                isOrgMember(contributor, ORG_NAME)
+                                  ? "text-livepeer"
+                                  : ""
+                              }`}
+                            >
+                              {truncatedName}
+                            </p>
+                          </a>
+                        </TooltipTrigger>
+                        {isTruncated && (
+                          <TooltipContent>{contributor.login}</TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TooltipProvider>
+                    <a
+                      href={`https://github.com/search?q=org%3Alivepeer+author%3A${contributor.login}&type=commits`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <p className="text-sm text-gray-500">
+                        Contributions:{" "}
+                        {formatCompactNumber(
+                          displayLastYearContributions
+                            ? contributor.yearly_contributions
+                            : contributor.contributions
+                        )}
+                      </p>
+                    </a>
+                  </div>
+                );
+              })}
+        </div>
+      )}
 
-      {/* Pagination */}
-      <div className="flex justify-center w-full">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(infiniteContributors.length / 12)}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      {/* Pagination - Only show in normal mode */}
+      {!isRandomMode && (
+        <div className="flex justify-center w-full">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
 
       {/* Footer */}
       <Footer />
