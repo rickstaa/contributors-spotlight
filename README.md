@@ -169,6 +169,30 @@ The web application uses the following environment variables:
 - `NEXT_PUBLIC_ORG_LOGO_LIGHT`: The light logo of the organization.
 - `NEXT_PUBLIC_ORG_LOGO_DARK`: The dark logo of the organization.
 
+## Display Modes and URL Parameters
+
+The application supports different display modes and customization options through URL parameters:
+
+### Grid Layout Customization
+
+- `rows=<number>`: Specify the number of rows to display (e.g., `rows=1` for a single row)
+- `page=<number>`: Navigate to a specific page of contributors
+- `orgMembers=<true|false>`: Show or hide organization members
+- `lastYear=<true|false>`: Show contributions from the last year instead of all time
+
+### Random Mode / Carousel
+
+The application includes a carousel mode that randomly displays contributors in a single row:
+
+- `random=true`: Enable random carousel mode
+- `scrollSpeed=<slow|medium|fast>`: Control how quickly the carousel transitions (default: slow)
+- `randomSpeed=<slow|medium|fast>`: Control how often new random contributors appear (default: medium)
+
+Example URL with parameters:
+```
+https://your-app.com/widget?random=true&scrollSpeed=medium&rows=1
+```
+
 ## Automating Contributor Data Generation
 
 This repository includes a GitHub Action to automate the generation of contributor data (see [.github/workflows/org-contributors-info.yml](.github/workflows/org-contributors-info.yml)). This action runs the `get_org_contributors_info.py` script and publishes the generated `contributors_info.json` file to the repository's GitHub Pages. The action uses the Livepeer organization as an example. To use it for your organization, enable [GitHub Pages](https://pages.github.com/) for your forked repository and update the following environment variables in the action:
