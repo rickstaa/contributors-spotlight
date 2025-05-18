@@ -441,7 +441,7 @@ export const ContributorsGrid = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm whitespace-nowrap text-gray-500">
                             Contributions:{" "}
                             {formatCompactNumber(
                               displayLastYearContributions
@@ -549,7 +549,7 @@ export const ContributorsGrid = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm whitespace-nowrap text-gray-500">
                         Contributions:{" "}
                         {formatCompactNumber(
                           displayLastYearContributions
