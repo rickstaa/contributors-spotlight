@@ -169,6 +169,23 @@ The web application uses the following environment variables:
 - `NEXT_PUBLIC_ORG_LOGO_LIGHT`: The light logo of the organization.
 - `NEXT_PUBLIC_ORG_LOGO_DARK`: The dark logo of the organization.
 
+### Widget Embed
+
+The app includes a dedicated widget page you can embed without the site header. Use the `/widget` route to render the contributors grid in a minimal layout that fits well inside an iframe.
+
+Example embed:
+
+```html
+<iframe
+  src="https://your-deployment-url.com/widget"
+  title="Contributors Spotlight"
+  width="100%"
+  height="800"
+  style="border:0;"
+  loading="lazy"
+></iframe>
+```
+
 ## Automating Contributor Data Generation
 
 This repository includes a GitHub Action to automate the generation of contributor data (see [.github/workflows/org-contributors-info.yml](.github/workflows/org-contributors-info.yml)). This action runs the `get_org_contributors_info.py` script and publishes the generated `contributors_info.json` file to the repository's GitHub Pages. The action uses the Livepeer organization as an example. To use it for your organization, enable [GitHub Pages](https://pages.github.com/) for your forked repository and update the following environment variables in the action:
