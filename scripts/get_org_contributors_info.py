@@ -11,13 +11,22 @@ import os
 from typing import Dict, List
 
 from github import Github
+from github.GithubException import GithubException
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = os.getenv("ORG_NAME")
-BOT_ACCOUNTS = os.getenv("BOT_ACCOUNTS", "").split(",")
-EXCLUDE_REPOS = os.getenv("EXCLUDE_REPOS", "").split(",")
+BOT_ACCOUNTS = [
+    account.strip().lower()
+    for account in os.getenv("BOT_ACCOUNTS", "").split(",")
+    if account.strip()
+]
+EXCLUDE_REPOS = [
+    repo.strip()
+    for repo in os.getenv("EXCLUDE_REPOS", "").split(",")
+    if repo.strip()
+]
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN environment variable not set")
@@ -161,6 +170,14 @@ def get_contributions_between_dates(
     return commits.totalCount
 
 
+def get_contributor_attr(obj, name: str, default: str = "") -> str:
+    """Safely retrieves an attribute from a PyGithub object."""
+    try:
+        return getattr(obj, name)
+    except GithubException:
+        return default
+
+
 def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
     """Retrieves information about organization contributors.
 
@@ -184,28 +201,36 @@ def get_org_contributors_info(org_name: str) -> List[Dict[str, any]]:
     print("Retrieving contributors info...")
     for repo in public_repos:
         for contributor in repo.get_contributors():
-            if "[bot]" in contributor.login or contributor.login in BOT_ACCOUNTS:
+            login = contributor.login
+            login_lower = login.lower()
+            if (
+                getattr(contributor, "type", "") == "Bot"
+                or login_lower.endswith("[bot]")
+                or login_lower in BOT_ACCOUNTS
+            ):
                 continue  # Skip bot contributors
-            if contributor.login not in contributors_info:
+            if login not in contributors_info:
                 contributors_info[contributor.login] = ContributorInfo(
-                    login=contributor.login,
-                    name=contributor.name,
-                    avatar_url=contributor.avatar_url,
-                    location=contributor.location,
-                    company=contributor.company,
-                    bio=contributor.bio,
-                    blog_url=contributor.blog,
-                    twitter_username=contributor.twitter_username,
-                    org_member=contributor.login in public_members,
+                    login=login,
+                    name=get_contributor_attr(contributor, "name"),
+                    avatar_url=get_contributor_attr(contributor, "avatar_url"),
+                    location=get_contributor_attr(contributor, "location"),
+                    company=get_contributor_attr(contributor, "company"),
+                    bio=get_contributor_attr(contributor, "bio"),
+                    blog_url=get_contributor_attr(contributor, "blog"),
+                    twitter_username=get_contributor_attr(
+                        contributor, "twitter_username"
+                    ),
+                    org_member=login in public_members,
                 )
 
-            contributors_info[contributor.login].add_contributions(
+            contributors_info[login].add_contributions(
                 contributions=contributor.contributions
             )
             yearly_contributions = get_contributions_between_dates(
-                repo, contributor.login, start_date, end_date
+                repo, login, start_date, end_date
             )
-            contributors_info[contributor.login].add_yearly_contributions(
+            contributors_info[login].add_yearly_contributions(
                 yearly_contributions
             )
         print(f"Retrieved contributors info for {repo.name}")
