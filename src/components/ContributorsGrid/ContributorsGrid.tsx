@@ -164,12 +164,8 @@ export const ContributorsGrid = () => {
     }
 
     // Preserve layout configuration params
-    if (sideArrows) {
-      params.set("paginationArrows", "side");
-    }
-    if (hidePageNumbers) {
-      params.set("hidePageNumbers", "true");
-    }
+    if (sideArrows) params.set("paginationArrows", "side");
+    if (hidePageNumbers) params.set("hidePageNumbers", "true");
 
     router.replace(`?${params.toString()}`);
   }, [
