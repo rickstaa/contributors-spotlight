@@ -153,15 +153,9 @@ export const ContributorsGrid = () => {
   // Update the URL query params when the state changes.
   useEffect(() => {
     const params = new URLSearchParams();
-    if (excludeOrgMembers) {
-      params.set("orgMembers", "false");
-    }
-    if (displayLastYearContributions) {
-      params.set("lastYear", "true");
-    }
-    if (currentPage > 1) {
-      params.set("page", currentPage.toString());
-    }
+    if (excludeOrgMembers) params.set("orgMembers", "false");
+    if (displayLastYearContributions) params.set("lastYear", "true");
+    if (currentPage > 1) params.set("page", currentPage.toString());
 
     // Preserve layout configuration params
     if (sideArrows) params.set("paginationArrows", "side");
