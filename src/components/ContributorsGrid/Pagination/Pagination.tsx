@@ -26,6 +26,10 @@ interface ContributorsPaginationProps {
   totalPages: number;
   /** Function to call when the page changes. */
   onPageChange: (page: number) => void;
+  /** Whether to hide the previous/next arrow buttons (e.g. when using side arrows). */
+  hideArrows?: boolean;
+  /** Whether to hide the page number indicators. */
+  hidePageNumbers?: boolean;
 }
 
 /**
@@ -36,6 +40,8 @@ export const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
+  hideArrows = false,
+  hidePageNumbers = false,
 }: ContributorsPaginationProps) => {
   /**
    * Renders the pagination items.
@@ -136,31 +142,39 @@ export const Pagination = ({
           <Skeleton className="w-[340px] sm:w-[460px] h-9" />
         ) : (
           <>
-            <PaginationItem>
-              <PaginationPrevious
-                href="#"
-                aria-disabled={currentPage <= 1}
-                tabIndex={currentPage <= 1 ? -1 : undefined}
-                onClick={() => onPageChange(currentPage - 1)}
-                className={`${
-                  totalPages > 4 ? "pagination-previous-mobile" : ""
-                } ${currentPage <= 1 ? "pointer-events-none opacity-50" : ""}`}
-              />
-            </PaginationItem>
-            {renderPaginationItems}
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                aria-disabled={currentPage === totalPages}
-                tabIndex={currentPage === totalPages ? -1 : undefined}
-                onClick={() => onPageChange(currentPage + 1)}
-                className={`${totalPages > 4 ? "pagination-next-mobile" : ""} ${
-                  currentPage === totalPages
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }`}
-              />
-            </PaginationItem>
+            {!hideArrows && (
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  aria-disabled={currentPage <= 1}
+                  tabIndex={currentPage <= 1 ? -1 : undefined}
+                  onClick={() => onPageChange(currentPage - 1)}
+                  className={`${
+                    totalPages > 4 ? "pagination-previous-mobile" : ""
+                  } ${
+                    currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+            )}
+            {!hidePageNumbers && renderPaginationItems}
+            {!hideArrows && (
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  aria-disabled={currentPage === totalPages}
+                  tabIndex={currentPage === totalPages ? -1 : undefined}
+                  onClick={() => onPageChange(currentPage + 1)}
+                  className={`${
+                    totalPages > 4 ? "pagination-next-mobile" : ""
+                  } ${
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }`}
+                />
+              </PaginationItem>
+            )}
           </>
         )}
       </PaginationContent>
