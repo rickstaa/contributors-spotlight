@@ -338,10 +338,10 @@ export const ContributorsGrid = () => {
             aria-label="Go to previous page"
             disabled={isPrevDisabled}
             onClick={() => handlePageChange(currentPage - 1)}
-            className={`flex-shrink-0 p-2 rounded-md transition-colors ${
+            className={`flex-shrink-0 p-2 rounded-full border border-muted-foreground/20 bg-muted/40 transition-colors ${
               isPrevDisabled
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-accent cursor-pointer"
+                : "hover:bg-accent hover:border-muted-foreground/40 cursor-pointer"
             }`}
           >
             <ChevronLeft className="h-6 w-6" />
@@ -351,10 +351,10 @@ export const ContributorsGrid = () => {
             aria-label="Go to next page"
             disabled={isNextDisabled}
             onClick={() => handlePageChange(currentPage + 1)}
-            className={`flex-shrink-0 p-2 rounded-md transition-colors ${
+            className={`flex-shrink-0 p-2 rounded-full border border-muted-foreground/20 bg-muted/40 transition-colors ${
               isNextDisabled
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-accent cursor-pointer"
+                : "hover:bg-accent hover:border-muted-foreground/40 cursor-pointer"
             }`}
           >
             <ChevronRight className="h-6 w-6" />
