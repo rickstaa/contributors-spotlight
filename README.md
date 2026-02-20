@@ -186,6 +186,29 @@ Example embed:
 ></iframe>
 ```
 
+You can customize the widget by appending query parameters to the URL:
+
+| Parameter          | Description                          | Values                          | Default  |
+| ------------------ | ------------------------------------ | ------------------------------- | -------- |
+| `orgMembers`       | Show only org members                | `true`, `false`                 | `false`  |
+| `lastYear`         | Display last year's contributions    | `true`, `false`                 | `false`  |
+| `page`             | Initial page number                  | Any positive integer            | `1`      |
+| `paginationArrows` | Position of pagination arrows        | `bottom`, `side`                | `bottom` |
+| `hidePageNumbers`  | Hide the page number indicators      | `true`, `false`                 | `false`  |
+
+Example with parameters:
+
+```html
+<iframe
+  src="https://your-deployment-url.com/widget?orgMembers=true&paginationArrows=side&hidePageNumbers=true"
+  title="Contributors Spotlight"
+  width="100%"
+  height="800"
+  style="border:0;"
+  loading="lazy"
+></iframe>
+```
+
 ## Automating Contributor Data Generation
 
 This repository includes a GitHub Action to automate the generation of contributor data (see [.github/workflows/org-contributors-info.yml](.github/workflows/org-contributors-info.yml)). This action runs the `get_org_contributors_info.py` script and publishes the generated `contributors_info.json` file to the repository's GitHub Pages. The action uses the Livepeer organization as an example. To use it for your organization, enable [GitHub Pages](https://pages.github.com/) for your forked repository and update the following environment variables in the action:
