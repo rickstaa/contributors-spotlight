@@ -132,18 +132,14 @@ export const ContributorsGrid = () => {
   );
   const [displayLastYearContributions, setDisplayLastYearContributions] =
     useLocalStorage("lastYear", false);
+  // Use unclamped cols/rows for initial state so server and client match.
+  // CSS responsive classes handle mobile hiding; useLayoutEffect corrects after hydration.
   const [itemsPerPage, setItemsPerPage] = useState(() => {
-    if (cols || rows) {
-      const responsiveMax = getResponsiveCols();
-      return Math.min(cols ?? responsiveMax, responsiveMax) * (rows ?? 1);
-    }
+    if (cols || rows) return (cols ?? 1) * (rows ?? 1);
     return getItemsPerPage();
   });
   const [effectiveCols, setEffectiveCols] = useState<number | null>(() => {
-    if (cols || rows) {
-      const responsiveMax = getResponsiveCols();
-      return Math.min(cols ?? responsiveMax, responsiveMax);
-    }
+    if (cols || rows) return cols ?? 1;
     return null;
   });
   const [loading, setLoading] = useState(true);
