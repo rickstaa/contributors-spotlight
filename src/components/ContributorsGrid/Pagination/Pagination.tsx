@@ -139,7 +139,7 @@ export const Pagination = ({
     <UIPagination>
       <PaginationContent>
         {totalPages < 1 ? (
-          <Skeleton className="w-[340px] sm:w-[460px] h-9" />
+          <Skeleton className={hideArrows ? "w-[276px] h-9" : "w-[340px] sm:w-[460px] h-9"} />
         ) : (
           <>
             {!hideArrows && (

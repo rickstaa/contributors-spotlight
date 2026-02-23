@@ -2,7 +2,7 @@
  * @file Contains the contributors info grid component.
  */
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ORG_NAME } from "@/app/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,7 +13,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Footer } from "@/components/ContributorsGrid/Footer";
-import { formatCompactNumber, isOrgMember, truncateString } from "@/lib/utils";
+import {
+  formatCompactNumber,
+  isOrgMember,
+  shuffleArray,
+  truncateString,
+} from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
@@ -29,6 +34,20 @@ const ITEMS_PER_PAGE = {
   md: 9, // Medium screens (tablet)
   lg: 12, // Large screens
   xl: 20, // Extra large screens (desktop)
+};
+
+/**
+ * Get the maximum number of columns for the current screen width.
+ * @returns The responsive column count.
+ */
+const getResponsiveCols = () => {
+  if (typeof window === "undefined") return 1;
+  const width = window.innerWidth;
+  if (width >= 1280) return 5;
+  if (width >= 1024) return 4;
+  if (width >= 768) return 3;
+  if (width >= 640) return 2;
+  return 1;
 };
 
 /**
@@ -94,6 +113,17 @@ const fetchContributorsData = async (): Promise<Contributor[]> => {
 export const ContributorsGrid = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Retrieve layout configuration from query parameters.
+  const paginationArrows = searchParams.get("paginationArrows") ?? "bottom";
+  const sideArrows = paginationArrows === "side";
+  const hidePageNumbers = searchParams.get("hidePageNumbers") === "true";
+  const randomize = searchParams.get("randomize") === "true";
+  const colsParam = searchParams.get("cols") ?? searchParams.get("columns");
+  const rowsParam = searchParams.get("rows");
+  const cols = colsParam ? parseInt(colsParam, 10) || null : null;
+  const rows = rowsParam ? parseInt(rowsParam, 10) || null : null;
+
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [excludeOrgMembers, setExcludeOrgMembers] = useLocalStorage(
@@ -102,20 +132,29 @@ export const ContributorsGrid = () => {
   );
   const [displayLastYearContributions, setDisplayLastYearContributions] =
     useLocalStorage("lastYear", false);
-  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    if (cols || rows) {
+      const responsiveMax = getResponsiveCols();
+      return Math.min(cols ?? responsiveMax, responsiveMax) * (rows ?? 1);
+    }
+    return getItemsPerPage();
+  });
+  const [effectiveCols, setEffectiveCols] = useState<number | null>(() => {
+    if (cols || rows) {
+      const responsiveMax = getResponsiveCols();
+      return Math.min(cols ?? responsiveMax, responsiveMax);
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
-
-  // Layout configuration from query parameters (read-only, not user-toggled)
-  const paginationArrows = searchParams.get("paginationArrows") ?? "bottom";
-  const sideArrows = paginationArrows === "side";
-  const hidePageNumbers = searchParams.get("hidePageNumbers") === "true";
 
   // Fetch contributors info from the API endpoints.
   useEffect(() => {
     const fetchContributors = async () => {
       try {
-        const extendedContributorsData = await fetchContributorsData();
-        setContributors(extendedContributorsData);
+        const data = await fetchContributorsData();
+        // Shuffle at fetch time (client-only) to avoid hydration mismatch.
+        setContributors(randomize ? shuffleArray(data) : data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -124,7 +163,7 @@ export const ContributorsGrid = () => {
     };
 
     fetchContributors();
-  }, []);
+  }, [randomize]);
 
   // Overwrite state with query parameters if they are present
   useEffect(() => {
@@ -157,9 +196,12 @@ export const ContributorsGrid = () => {
     if (displayLastYearContributions) params.set("lastYear", "true");
     if (currentPage > 1) params.set("page", currentPage.toString());
 
-    // Preserve layout configuration params
+    // Preserve layout configuration params.
     if (sideArrows) params.set("paginationArrows", "side");
     if (hidePageNumbers) params.set("hidePageNumbers", "true");
+    if (randomize) params.set("randomize", "true");
+    if (cols) params.set(searchParams.has("columns") ? "columns" : "cols", cols.toString());
+    if (rows) params.set("rows", rows.toString());
 
     router.replace(`?${params.toString()}`);
   }, [
@@ -169,18 +211,31 @@ export const ContributorsGrid = () => {
     router,
     sideArrows,
     hidePageNumbers,
+    randomize,
+    cols,
+    rows,
   ]);
 
-  // Adjust items per page based on screen size
-  useEffect(() => {
-    const updateItemsPerPage = () => {
-      setItemsPerPage(getItemsPerPage());
+  // Sync grid layout with viewport size (runs before paint to avoid flicker).
+  useLayoutEffect(() => {
+    const update = () => {
+      if (cols || rows) {
+        // Clamp cols to the responsive max so the grid fits on small screens
+        const responsiveMax = getResponsiveCols();
+        const actualCols = Math.min(cols ?? responsiveMax, responsiveMax);
+        const actualRows = rows ?? Math.ceil(getItemsPerPage() / responsiveMax);
+        setEffectiveCols(actualCols);
+        setItemsPerPage(actualCols * actualRows);
+      } else {
+        setEffectiveCols(null);
+        setItemsPerPage(getItemsPerPage());
+      }
     };
 
-    updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
-    return () => window.removeEventListener("resize", updateItemsPerPage);
-  }, []);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [cols, rows]);
 
   /**
    * Changes the pagination page.
@@ -190,7 +245,7 @@ export const ContributorsGrid = () => {
     setCurrentPage(page);
   };
 
-  // Calculate filtered and sorted contributors based on the state.
+  // Filter and sort contributors (randomized order skips sorting).
   const filteredContributors = contributors
     .filter(
       (contributor) => !excludeOrgMembers || !isOrgMember(contributor, ORG_NAME)
@@ -198,15 +253,17 @@ export const ContributorsGrid = () => {
     .filter(
       (contributor) =>
         !displayLastYearContributions || contributor.yearly_contributions > 0
-    )
-    .sort((a, b) =>
-      displayLastYearContributions
-        ? b.yearly_contributions - a.yearly_contributions
-        : b.contributions - a.contributions
     );
+  const sortedContributors = randomize
+    ? filteredContributors
+    : filteredContributors.sort((a, b) =>
+        displayLastYearContributions
+          ? b.yearly_contributions - a.yearly_contributions
+          : b.contributions - a.contributions
+      );
 
   // Calculate pagination details.
-  const totalPages = Math.ceil(filteredContributors.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedContributors.length / itemsPerPage);
 
   // Adjust current page if it is out of range.
   useEffect(() => {
@@ -217,7 +274,7 @@ export const ContributorsGrid = () => {
 
   // Calculate contributors for the current page.
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedContributors = filteredContributors.slice(
+  const selectedContributors = sortedContributors.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -225,17 +282,47 @@ export const ContributorsGrid = () => {
   const isPrevDisabled = currentPage <= 1;
   const isNextDisabled = currentPage === totalPages;
 
+  // Use CSS-based responsive grid during loading so skeletons render correctly pre-hydration.
+  const useResponsiveSkeletonGrid = loading && !!(cols || rows);
+  const responsiveGridCols = [
+    "grid-cols-1",
+    "sm:grid-cols-2",
+    "md:grid-cols-3",
+    "lg:grid-cols-4",
+    "xl:grid-cols-5",
+  ]
+    .slice(0, cols ?? 1)
+    .join(" ");
+  const mobileItemCount = rows ?? 1;
+
   const contributorGrid = (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-start justify-items-start my-6 px-4">
+    <div
+      className={
+        effectiveCols
+          ? useResponsiveSkeletonGrid
+            ? `grid ${responsiveGridCols} gap-6 w-full items-start justify-items-center my-6 px-4`
+            : "grid gap-6 w-full items-start justify-items-center my-6 px-4"
+          : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full items-start justify-items-start my-6 px-4"
+      }
+      style={
+        effectiveCols && !useResponsiveSkeletonGrid
+          ? { gridTemplateColumns: `repeat(${effectiveCols}, minmax(0, 1fr))` }
+          : undefined
+      }
+    >
       {loading
         ? Array.from({ length: itemsPerPage }).map((_, index) => (
             <div
               key={`skeleton-${index}`}
-              className="flex flex-col items-center w-full min-w-[125px]"
+              className={`${
+                useResponsiveSkeletonGrid && index >= mobileItemCount
+                  ? "hidden sm:flex"
+                  : "flex"
+              } flex-col items-center w-full min-w-[125px]`}
             >
               <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 rounded-full" />
-              <Skeleton className="mt-3 w-24 h-4" />
-              <Skeleton className="mt-2 w-28 h-4" />
+              <Skeleton className={sideArrows ? "mt-2 w-20 h-6" : "mt-3 w-24 h-4"} />
+              <Skeleton className={sideArrows ? "w-24 h-5" : "mt-2 w-28 h-4"} />
             </div>
           ))
         : selectedContributors.map((contributor) => {
