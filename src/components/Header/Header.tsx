@@ -34,7 +34,7 @@ export const Header = () => {
   const getLogoContent = () => {
     if (!mounted) {
       return (
-        <div className="w-[30px] h-[36px] mr-4 flex items-center justify-center">
+        <div className="w-[30px] h-[30px] mr-4 flex items-center justify-center">
           <Skeleton className="w-full h-full" />
         </div>
       );
