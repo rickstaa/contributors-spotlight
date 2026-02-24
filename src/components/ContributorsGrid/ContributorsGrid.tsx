@@ -55,7 +55,7 @@ const getResponsiveCols = () => {
  * @returns The number of contributors to show per page.
  */
 const getItemsPerPage = () => {
-  if (typeof window === "undefined") return 0;
+  if (typeof window === "undefined") return ITEMS_PER_PAGE.xl;
 
   const width = window.innerWidth;
   if (width >= 1280) return ITEMS_PER_PAGE.xl;
@@ -64,6 +64,20 @@ const getItemsPerPage = () => {
   if (width >= 640) return ITEMS_PER_PAGE.sm;
 
   return ITEMS_PER_PAGE.default;
+};
+
+/**
+ * Get a Tailwind responsive visibility class for a skeleton item so that
+ * only the appropriate number of skeletons is visible at each breakpoint.
+ * @param index - The index of the skeleton item.
+ * @returns The responsive visibility class string.
+ */
+const getSkeletonVisibilityClass = (index: number): string => {
+  if (index < ITEMS_PER_PAGE.default) return "flex";
+  if (index < ITEMS_PER_PAGE.sm) return "hidden sm:flex";
+  if (index < ITEMS_PER_PAGE.md) return "hidden md:flex";
+  if (index < ITEMS_PER_PAGE.lg) return "hidden lg:flex";
+  return "hidden xl:flex";
 };
 
 /**
@@ -136,7 +150,7 @@ export const ContributorsGrid = () => {
   // CSS responsive classes handle mobile hiding; useLayoutEffect corrects after hydration.
   const [itemsPerPage, setItemsPerPage] = useState(() => {
     if (cols || rows) return (cols ?? 1) * (rows ?? 1);
-    return getItemsPerPage();
+    return ITEMS_PER_PAGE.xl;
   });
   const [effectiveCols, setEffectiveCols] = useState<number | null>(() => {
     if (cols || rows) return cols ?? 1;
@@ -313,7 +327,7 @@ export const ContributorsGrid = () => {
               className={`${
                 useResponsiveSkeletonGrid && index >= mobileItemCount
                   ? "hidden sm:flex"
-                  : "flex"
+                  : getSkeletonVisibilityClass(index)
               } flex-col items-center w-full min-w-[125px]`}
             >
               <Skeleton className="w-32 h-32 sm:w-28 sm:h-28 md:w-24 md:h-24 lg:w-20 lg:h-20 rounded-full" />
