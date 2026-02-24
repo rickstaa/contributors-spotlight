@@ -47,15 +47,14 @@ export const Header = () => {
       <Image
         src={logoSrc}
         alt={`${capitalize(ORG_NAME)} logo`}
-        width={30}
-        height={30}
-        className="inline-block"
+        fill
+        className="object-contain"
         onError={() => setImageError(true)}
       />
     );
 
     return (
-      <div className="w-[30px] h-[30px] mr-4 flex items-center justify-center">
+      <div className="relative w-[30px] h-[30px] mr-4">
         {ORG_WEBSITE ? (
           <a href={ORG_WEBSITE} target="_blank" rel="noopener noreferrer">
             {logo}
