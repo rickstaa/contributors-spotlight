@@ -195,6 +195,9 @@ You can customize the widget by appending query parameters to the URL:
 | `page`             | Initial page number                  | Any positive integer            | `1`      |
 | `paginationArrows` | Position of pagination arrows        | `bottom`, `side`                | `bottom` |
 | `hidePageNumbers`  | Hide the page number indicators      | `true`, `false`                 | `false`  |
+| `randomize`        | Randomize contributor order          | `true`, `false`                 | `false`  |
+| `cols` / `columns` | Number of grid columns               | Any positive integer            | Auto     |
+| `rows`             | Number of grid rows                  | Any positive integer            | Auto     |
 
 Example with parameters:
 
