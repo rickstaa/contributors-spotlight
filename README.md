@@ -198,6 +198,8 @@ You can customize the widget by appending query parameters to the URL:
 | `randomize`        | Randomize contributor order          | `true`, `false`                 | `false`  |
 | `cols` / `columns` | Number of grid columns               | Any positive integer            | Auto     |
 | `rows`             | Number of grid rows                  | Any positive integer            | Auto     |
+| `theme`            | Force a specific theme               | `light`, `dark`                 | System   |
+| `hideControls`     | Hide the control panel               | `true`, `false`                 | `false`  |
 
 Example with parameters:
 

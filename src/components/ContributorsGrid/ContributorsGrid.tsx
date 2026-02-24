@@ -20,6 +20,7 @@ import {
   truncateString,
 } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useLocalStorage } from "usehooks-ts";
 import { ControlPanel } from "./ControlPanel";
 import { ContributorCard } from "./ContributorCard";
@@ -137,6 +138,10 @@ export const ContributorsGrid = () => {
   const rowsParam = searchParams.get("rows");
   const cols = colsParam ? parseInt(colsParam, 10) || null : null;
   const rows = rowsParam ? parseInt(rowsParam, 10) || null : null;
+  const themeParam = searchParams.get("theme");
+  const hideControls = searchParams.get("hideControls") === "true";
+
+  const { setTheme } = useTheme();
 
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -157,6 +162,13 @@ export const ContributorsGrid = () => {
     return null;
   });
   const [loading, setLoading] = useState(true);
+
+  // Force theme when set via query parameter.
+  useEffect(() => {
+    if (themeParam === "light" || themeParam === "dark") {
+      setTheme(themeParam);
+    }
+  }, [themeParam, setTheme]);
 
   // Fetch contributors info from the API endpoints.
   useEffect(() => {
@@ -212,6 +224,8 @@ export const ContributorsGrid = () => {
     if (randomize) params.set("randomize", "true");
     if (cols) params.set(searchParams.has("columns") ? "columns" : "cols", cols.toString());
     if (rows) params.set("rows", rows.toString());
+    if (themeParam) params.set("theme", themeParam);
+    if (hideControls) params.set("hideControls", "true");
 
     router.replace(`?${params.toString()}`);
   }, [
@@ -224,6 +238,8 @@ export const ContributorsGrid = () => {
     randomize,
     cols,
     rows,
+    themeParam,
+    hideControls,
   ]);
 
   // Sync grid layout with viewport size (runs before paint to avoid flicker).
@@ -416,12 +432,14 @@ export const ContributorsGrid = () => {
   return (
     <div className="flex flex-col items-center">
       {/* Control Panel */}
-      <ControlPanel
-        excludeOrgMembers={excludeOrgMembers}
-        displayLastYearContributions={displayLastYearContributions}
-        setExcludeOrgMembers={setExcludeOrgMembers}
-        setDisplayLastYearContributions={setDisplayLastYearContributions}
-      />
+      {!hideControls && (
+        <ControlPanel
+          excludeOrgMembers={excludeOrgMembers}
+          displayLastYearContributions={displayLastYearContributions}
+          setExcludeOrgMembers={setExcludeOrgMembers}
+          setDisplayLastYearContributions={setDisplayLastYearContributions}
+        />
+      )}
       {/* Contributor Grid (with optional side arrows) */}
       {sideArrows ? (
         <div className="flex items-center w-full">
